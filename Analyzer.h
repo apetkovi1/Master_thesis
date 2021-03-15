@@ -1509,6 +1509,16 @@ public :
 	TH1F *Histo_VBF_1j_VBFH125=new TH1F("VBF_1j_VBFH125","VBF_1j_VBFH125",10,0,10);
 	TH1F *Histo_VBF_1j_ttH125=new TH1F("VBF_1j_ttH125","VBF_1j_ttH125",10,0,10);
 	TH1F *Histo_VBF_1j_ZZTo4lext1=new TH1F("VBF_1j_ZZTo4lext1","VBF_1j_ZZTo4lext1",10,0,10);
+	
+	TH1F *Histo_VHh_ggH125=new TH1F("VBF_1j_ggH125","VBF_1j_ggH125",10,0,10);
+	TH1F *Histo_VHh_VBFH125=new TH1F("VBF_1j_VBFH125","VBF_1j_VBFH125",10,0,10);
+	TH1F *Histo_VHh_ttH125=new TH1F("VBF_1j_ttH125","VBF_1j_ttH125",10,0,10);
+	TH1F *Histo_VHh_ZZTo4lext1=new TH1F("VBF_1j_ZZTo4lext1","VBF_1j_ZZTo4lext1",10,0,10);
+	
+	TH1F *Histo_ggH125=new TH1F("gH125","ggH125",7,0,7);
+	TH1F *Histo_VBFH125=new TH1F("VBFH125","VBFH125",7,0,7);
+	TH1F *Histo_ttH125=new TH1F("ttH125","ttH125",7,0,7);
+	TH1F *Histo_ZZTo4lext1=new TH1F("ZZTo4lext1","ZZTo4lext1",7,0,7);
 };
 
 #endif

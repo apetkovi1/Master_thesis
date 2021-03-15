@@ -38,6 +38,8 @@ namespace {
  
   cConstantSpline DVBF2jetsSpline("SmoothKDConstant_m4l_DjjVBF13TeV.root");
   cConstantSpline DVBF1jetSpline("SmoothKDConstant_m4l_DjVBF13TeV.root");
+  cConstantSpline DZHhSpline("SmoothKDConstant_m4l_DjjZH13TeV.root");
+  cConstantSpline DWHhSpline("SmoothKDConstant_m4l_DjjWH13TeV.root");
 }
 
 extern "C" float getDVBF2jetsConstant(float ZZMass){
@@ -48,31 +50,16 @@ extern "C" float getDVBF1jetConstant(float ZZMass){
   return DVBF1jetSpline.eval(ZZMass, false);
 }
 
+extern "C" float getDWHhConstant(float ZZMass){
+  return DWHhSpline.eval(ZZMass, false);
+}
+extern "C" float getDZHhConstant(float ZZMass){
+  return DZHhSpline.eval(ZZMass, false);
+}
+
 void Analyzer::Loop()
 {
-//   In a ROOT session, you can do:
-//      root> .L Analyzer.C
-//      root> Analyzer t
-//      root> t.GetEntry(12); // Fill t data members with entry number 12
-//      root> t.Show();       // Show values of entry 12
-//      root> t.Show(16);     // Read and show values of entry 16
-//      root> t.Loop();       // Loop on all entries
-//
-
-//     This is the loop skeleton where:
-//    jentry is the global entry number in the chain
-//    ientry is the entry number in the current Tree
-//  Note that the argument to GetEntry must be:
-//    jentry for TChain::GetEntry
-//    ientry for TTree::GetEntry and TBranch::GetEntry
-//
-//       To read only selected branches, Insert statements like:
-// METHOD1:
-//    fChain->SetBranchStatus("*",0);  // disable all branches
-//    fChain->SetBranchStatus("branchname",1);  // activate branchname
-// METHOD2: replace line
-//    fChain->GetEntry(jentry);       //read all branches
-//by  b_branchname->GetEntry(ientry); //read only this branch
+ 
    if (fChain == 0) return;
 
    Long64_t nentries = fChain->GetEntriesFast();
@@ -444,7 +431,7 @@ void Analyzer :: Categorize(TString s1)
    Long64_t nentries = fChain->GetEntriesFast();
    double w;
    Long64_t nbytes = 0, nb = 0;
-  for (Long64_t jentry=0; jentry<nentries;jentry++) {
+   for (Long64_t jentry=0; jentry<nentries;jentry++) {
       Long64_t ientry = LoadTree(jentry);
       if (ientry < 0) break;
       nb = fChain->GetEntry(jentry);   nbytes += nb;
@@ -453,45 +440,161 @@ void Analyzer :: Categorize(TString s1)
       float D_VBF2j=1./(1.+ c_Mela2j*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal/p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal);
 	  float c_Mela1j = getDVBF1jetConstant(ZZMass);
       float D_VBF1j = 1./(1.+ c_Mela1j*p_JQCD_SIG_ghg2_1_JHUGen_JECNominal/(p_JVBF_SIG_ghv1_1_JHUGen_JECNominal*pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal));
+	  float c_MelaWH = getDWHhConstant(ZZMass);
+	  float D_WHh = 1./(1.+ c_MelaWH*(p_HadWH_mavjj_true_JECNominal*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal)/(p_HadWH_mavjj_JECNominal*p_HadWH_SIG_ghw1_1_JHUGen_JECNominal));
+	  float c_MelaZH = getDZHhConstant(ZZMass);
+      float D_ZHh = 1./(1.+ c_MelaZH*(p_HadZH_mavjj_true_JECNominal*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal)/(p_HadZH_mavjj_JECNominal*p_HadZH_SIG_ghz1_1_JHUGen_JECNominal));
 	  if(s1.Contains("ggH125"))
 	  {
-		if(nExtraLep==0 && (((nCleanedJetsPt30==2 || nCleanedJetsPt30==3)&& nCleanedJetsPt30BTagged_bTagSF<=1)||(nCleanedJetsPt30>=4 && nCleanedJetsPt30BTagged_bTagSF==0))&& D_VBF2j>0.5)
-        //VBF_2j_ggH125++*w;
-        Histo_VBF_2j_ggH125->Fill(2,w);	
-		if( nExtraLep==0 && nCleanedJetsPt30==1 && D_VBF1j>0.5 )
-		Histo_VBF_1j_ggH125->Fill(2,w);
-	  }
+		  
+	if( nExtraLep==0 && (((nCleanedJetsPt30==2||nCleanedJetsPt30==3)&&nCleanedJetsPt30BTagged_bTagSF<=1)||(nCleanedJetsPt30>=4&&nCleanedJetsPt30BTagged_bTagSF==0)) && D_VBF2j>0.5 )
+    Histo_ggH125->Fill(4.5,w);
+
+    else if( nExtraLep==0 && (nCleanedJetsPt30==2||nCleanedJetsPt30==3||(nCleanedJetsPt30>=4&&nCleanedJetsPt30BTagged_bTagSF==0)) && (D_WHh>0.9||D_ZHh>0.9) )
+    Histo_ggH125->Fill(3.5,w); 
+
+    else if( ( nCleanedJetsPt30<=3 && nCleanedJetsPt30BTagged_bTagSF==0 && (nExtraLep==1||nExtraZ>=1) )|| ( nCleanedJetsPt30==0 && nExtraLep>=1 ) )
+    Histo_ggH125->Fill(2.5,w); 
+
+    else if( nCleanedJetsPt30>=4 && nCleanedJetsPt30BTagged_bTagSF>=1 && nExtraLep ==0)
+    Histo_ggH125->Fill(1.5,w); 
+  
+    else if( nExtraLep>=1 )
+    Histo_ggH125->Fill(0.5,w);
+	
+    else if( nExtraLep==0 && nCleanedJetsPt30==1 && D_VBF1j>0.5 )
+    Histo_ggH125->Fill(5.5,w);
+ 
+    else
+    Histo_ggH125->Fill(6.5,w);
+
+    }
+	
 	  if(s1.Contains("VBFH125"))
 	  {
-		if(nExtraLep==0 && (((nCleanedJetsPt30==2 || nCleanedJetsPt30==3)&& nCleanedJetsPt30BTagged_bTagSF<=1)||(nCleanedJetsPt30>=4 && nCleanedJetsPt30BTagged_bTagSF==0))&& D_VBF2j>0.5)
-        //VBF_2j_VBFH125++*w;
-        Histo_VBF_2j_VBFH125->Fill(2,w);
-		if( nExtraLep==0 && nCleanedJetsPt30==1 && D_VBF1j>0.5 )
-        Histo_VBF_1j_VBFH125->Fill(2,w);		
+	if( nExtraLep==0 && (((nCleanedJetsPt30==2||nCleanedJetsPt30==3)&&nCleanedJetsPt30BTagged_bTagSF<=1)||(nCleanedJetsPt30>=4&&nCleanedJetsPt30BTagged_bTagSF==0)) && D_VBF2j>0.5 )
+    Histo_VBFH125->Fill(4.5,w);
+
+    else if( nExtraLep==0 && (nCleanedJetsPt30==2||nCleanedJetsPt30==3||(nCleanedJetsPt30>=4&&nCleanedJetsPt30BTagged_bTagSF==0)) && (D_WHh>0.9||D_ZHh>0.9) )
+    Histo_VBFH125->Fill(3.5,w); 
+
+    else if( ( nCleanedJetsPt30<=3 && nCleanedJetsPt30BTagged_bTagSF==0 && (nExtraLep==1||nExtraZ>=1) )|| ( nCleanedJetsPt30==0 && nExtraLep>=1 ) )
+    Histo_VBFH125->Fill(2.5,w); 
+
+    else if( nCleanedJetsPt30>=4 && nCleanedJetsPt30BTagged_bTagSF>=1 && nExtraLep ==0)
+    Histo_VBFH125->Fill(1.5,w); 
+  
+    else if( nExtraLep>=1 )
+    Histo_VBFH125->Fill(0.5,w);
+	
+    else if( nExtraLep==0 && nCleanedJetsPt30==1 && D_VBF1j>0.5 )
+    Histo_VBFH125->Fill(5.5,w);
+ 
+    else
+    Histo_VBFH125->Fill(6.5,w); 
+
 	  }
 	  if(s1.Contains("ttH125"))
 	  {
-		if(nExtraLep==0 && (((nCleanedJetsPt30==2 || nCleanedJetsPt30==3)&& nCleanedJetsPt30BTagged_bTagSF<=1)||(nCleanedJetsPt30>=4 && nCleanedJetsPt30BTagged_bTagSF==0))&& D_VBF2j>0.5)
-        //VBF_2j_ttH125++*w;
-        Histo_VBF_2j_ttH125->Fill(2,w);	
-		if( nExtraLep==0 && nCleanedJetsPt30==1 && D_VBF1j>0.5 )
-		Histo_VBF_1j_ttH125->Fill(2,w);
+	if( nExtraLep==0 && (((nCleanedJetsPt30==2||nCleanedJetsPt30==3)&&nCleanedJetsPt30BTagged_bTagSF<=1)||(nCleanedJetsPt30>=4&&nCleanedJetsPt30BTagged_bTagSF==0)) && D_VBF2j>0.5 )
+    Histo_ttH125->Fill(4.5,w);
+
+    else if( nExtraLep==0 && (nCleanedJetsPt30==2||nCleanedJetsPt30==3||(nCleanedJetsPt30>=4&&nCleanedJetsPt30BTagged_bTagSF==0)) && (D_WHh>0.9||D_ZHh>0.9) )
+    Histo_ttH125->Fill(3.5,w); 
+
+    else if( ( nCleanedJetsPt30<=3 && nCleanedJetsPt30BTagged_bTagSF==0 && (nExtraLep==1||nExtraZ>=1) )|| ( nCleanedJetsPt30==0 && nExtraLep>=1 ) )
+    Histo_ttH125->Fill(2.5,w); 
+
+    else if( nCleanedJetsPt30>=4 && nCleanedJetsPt30BTagged_bTagSF>=1 && nExtraLep ==0)
+    Histo_ttH125->Fill(1.5,w); 
+  
+    else if( nExtraLep>=1 )
+    Histo_ttH125->Fill(0.5,w);
+	
+    else if( nExtraLep==0 && nCleanedJetsPt30==1 && D_VBF1j>0.5 )
+    Histo_ttH125->Fill(5.5,w);
+ 
+    else
+    Histo_ttH125->Fill(6.5,w); 
 	  }
+	  
 	  if(s1.Contains("ZZTo4lext1"))
 	  {
-		if(nExtraLep==0 && (((nCleanedJetsPt30==2 || nCleanedJetsPt30==3)&& nCleanedJetsPt30BTagged_bTagSF<=1)||(nCleanedJetsPt30>=4 && nCleanedJetsPt30BTagged_bTagSF==0))&& D_VBF2j>0.5)
-        Histo_VBF_2j_ZZTo4lext1->Fill(2,w);	
-        if( nExtraLep==0 && nCleanedJetsPt30==1 && D_VBF1j>0.5 )
-        Histo_VBF_1j_ZZTo4lext1->Fill(2,w);			
+	if( nExtraLep==0 && (((nCleanedJetsPt30==2||nCleanedJetsPt30==3)&&nCleanedJetsPt30BTagged_bTagSF<=1)||(nCleanedJetsPt30>=4&&nCleanedJetsPt30BTagged_bTagSF==0)) && D_VBF2j>0.5 )
+    Histo_ZZTo4lext1->Fill(4.5,w);
+
+    else if( nExtraLep==0 && (nCleanedJetsPt30==2||nCleanedJetsPt30==3||(nCleanedJetsPt30>=4&&nCleanedJetsPt30BTagged_bTagSF==0)) && (D_WHh>0.9||D_ZHh>0.9) )
+    Histo_ZZTo4lext1->Fill(3.5,w); 
+
+    else if( ( nCleanedJetsPt30<=3 && nCleanedJetsPt30BTagged_bTagSF==0 && (nExtraLep==1||nExtraZ>=1) )|| ( nCleanedJetsPt30==0 && nExtraLep>=1 ) )
+    Histo_ZZTo4lext1->Fill(2.5,w); 
+
+    else if( nCleanedJetsPt30>=4 && nCleanedJetsPt30BTagged_bTagSF>=1 && nExtraLep ==0)
+    Histo_ZZTo4lext1->Fill(1.5,w); 
+  
+    else if( nExtraLep>=1 )
+    Histo_ZZTo4lext1->Fill(0.5,w);
+	
+    else if( nExtraLep==0 && nCleanedJetsPt30==1 && D_VBF1j>0.5 )
+    Histo_ZZTo4lext1->Fill(5.5,w);
+ 
+    else
+    Histo_ZZTo4lext1->Fill(6.5,w);
 	  }
   }
 }
 
 void Analyzer :: Categorize_Display()
 {
+	int i;
 	//cout<<VBF_2j_ggH125<<" "<<VBF_2j_VBFH125<<" "<<VBF_2j_ttH125<<" "<<VBF_2j_ZZTo4lext1<<endl;
+	/*
 	cout<<Histo_VBF_2j_ggH125->Integral()<<" "<<Histo_VBF_2j_VBFH125->Integral()<<" "<<Histo_VBF_2j_ttH125->Integral()<<" "<<Histo_VBF_2j_ZZTo4lext1->Integral()<<endl;
 	cout<<Histo_VBF_1j_ggH125->Integral()<<" "<<Histo_VBF_1j_VBFH125->Integral()<<" "<<Histo_VBF_1j_ttH125->Integral()<<" "<<Histo_VBF_1j_ZZTo4lext1->Integral()<<endl;
+	cout<<Histo_VHh_ggH125->Integral()<<" "<<Histo_VHh_VBFH125->Integral()<<" "<<Histo_VHh_ttH125->Integral()<<" "<<Histo_VHh_ZZTo4lext1->Integral()<<endl;
+	*/
+	gStyle->SetOptStat(0);
+	const char *categories[7]={"ttH-leptonic tagged ","ttH-hadronic tagged ","VH-leptonic tagged ","VH-hadronic tagged ","VBF-2jet tagged "," VBF-1jet tagged"," Untagged"};
+	Histo_ggH125->SetTitle("ggH");
+	Histo_VBFH125->SetTitle("VBF");
+	Histo_ttH125->SetTitle("ttH");
+	Histo_ZZTo4lext1->SetTitle("qqZZ");
+	for (i=1;i<=7;i++) 
+	{
+		Histo_ggH125->GetXaxis()->SetBinLabel(i,categories[i-1]);
+		Histo_VBFH125->GetXaxis()->SetBinLabel(i,categories[i-1]);
+		Histo_ttH125->GetXaxis()->SetBinLabel(i,categories[i-1]);
+		Histo_ZZTo4lext1->GetXaxis()->SetBinLabel(i,categories[i-1]);
+	}
+	Histo_ggH125->SetFillColor(kBlue);
+	Histo_VBFH125->SetFillColor(kGreen);
+	Histo_ttH125->SetFillColor(kMagenta);
+	Histo_ZZTo4lext1->SetFillColor(kRed);
+	Histo_ggH125->GetYaxis()->SetTitle("Expected events");
+	Histo_VBFH125->GetYaxis()->SetTitle("Expected events");
+	Histo_ttH125->GetYaxis()->SetTitle("Expected events");
+	Histo_ZZTo4lext1->GetYaxis()->SetTitle("Expected events");
+	
+	TCanvas *canvas_categories_1=new TCanvas("ggH125","ggH125",800,800);
+	canvas_categories_1->Divide(2,2);
+	
+	canvas_categories_1->cd(1);
+	gPad->SetLeftMargin(0.25);
+	Histo_ggH125->Draw("hbar");
+	
+	canvas_categories_1->cd(2);
+	gPad->SetLeftMargin(0.25);
+	Histo_VBFH125->Draw("hbar");
+	
+	canvas_categories_1->cd(3);
+	gPad->SetLeftMargin(0.25);
+	Histo_ttH125->Draw("hbar");
+	
+	canvas_categories_1->cd(4);
+	gPad->SetLeftMargin(0.25);
+	Histo_ZZTo4lext1->Draw("hbar");
+	
+	canvas_categories_1->SaveAs("Categorization_0.9_cut.pdf");
 }
    
  
