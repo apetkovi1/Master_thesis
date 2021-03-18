@@ -677,7 +677,6 @@ void Analyzer :: Categorize_Display()
 	t6->Draw();
 	t7->Draw();
 	master_canvas->SaveAs("Categorization_stack.pdf");
-	//stack
 }
    
  
