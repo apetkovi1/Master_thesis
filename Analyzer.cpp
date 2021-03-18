@@ -640,7 +640,7 @@ void Analyzer :: Categorize_Display()
 	  Histo_ttH125->SetBinContent(i,Histo_ttH125->Integral(i,i)/exp_events[i-1]);
 	  Histo_ZZTo4lext1->SetBinContent(i,Histo_ZZTo4lext1->Integral(i,i)/exp_events[i-1]);
 	}
-	THStack *stack = new THStack("stack","Categorization (simulation) ; ; Signal fraction");
+	THStack *stack = new THStack("stack","Categorization (simulation) ; ;fraction");
 	TCanvas *master_canvas=new TCanvas("master","master",1400,800);
 	TLegend* legend=new TLegend(0.9,0.7,0.98,0.9);
 	legend->AddEntry(Histo_ggH125,"ggH","f");
