@@ -446,11 +446,12 @@ void Analyzer :: Categorize(TString s1)
       float D_ZHh = 1./(1.+ c_MelaZH*(p_HadZH_mavjj_true_JECNominal*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal)/(p_HadZH_mavjj_JECNominal*p_HadZH_SIG_ghz1_1_JHUGen_JECNominal));
 	  if(s1.Contains("ggH125"))
 	  {
-		  
+	if(ZZMass>118 && ZZMass<130)
+	{		
 	if( nExtraLep==0 && (((nCleanedJetsPt30==2||nCleanedJetsPt30==3)&&nCleanedJetsPt30BTagged_bTagSF<=1)||(nCleanedJetsPt30>=4&&nCleanedJetsPt30BTagged_bTagSF==0)) && D_VBF2j>0.5 )
     Histo_ggH125->Fill(4.5,w);
 
-    else if( nExtraLep==0 && (nCleanedJetsPt30==2||nCleanedJetsPt30==3||(nCleanedJetsPt30>=4&&nCleanedJetsPt30BTagged_bTagSF==0)) && (D_WHh>0.9||D_ZHh>0.9) )
+    else if( nExtraLep==0 && (nCleanedJetsPt30==2||nCleanedJetsPt30==3||(nCleanedJetsPt30>=4&&nCleanedJetsPt30BTagged_bTagSF==0)) && (D_WHh>0.5||D_ZHh>0.5) )
     Histo_ggH125->Fill(3.5,w); 
 
     else if( ( nCleanedJetsPt30<=3 && nCleanedJetsPt30BTagged_bTagSF==0 && (nExtraLep==1||nExtraZ>=1) )|| ( nCleanedJetsPt30==0 && nExtraLep>=1 ) )
@@ -467,15 +468,17 @@ void Analyzer :: Categorize(TString s1)
  
     else
     Histo_ggH125->Fill(6.5,w);
-
+	}
     }
 	
 	  if(s1.Contains("VBFH125"))
 	  {
+		  if(ZZMass>118 && ZZMass<130)
+		  {
 	if( nExtraLep==0 && (((nCleanedJetsPt30==2||nCleanedJetsPt30==3)&&nCleanedJetsPt30BTagged_bTagSF<=1)||(nCleanedJetsPt30>=4&&nCleanedJetsPt30BTagged_bTagSF==0)) && D_VBF2j>0.5 )
     Histo_VBFH125->Fill(4.5,w);
 
-    else if( nExtraLep==0 && (nCleanedJetsPt30==2||nCleanedJetsPt30==3||(nCleanedJetsPt30>=4&&nCleanedJetsPt30BTagged_bTagSF==0)) && (D_WHh>0.9||D_ZHh>0.9) )
+    else if( nExtraLep==0 && (nCleanedJetsPt30==2||nCleanedJetsPt30==3||(nCleanedJetsPt30>=4&&nCleanedJetsPt30BTagged_bTagSF==0)) && (D_WHh>0.5||D_ZHh>0.5) )
     Histo_VBFH125->Fill(3.5,w); 
 
     else if( ( nCleanedJetsPt30<=3 && nCleanedJetsPt30BTagged_bTagSF==0 && (nExtraLep==1||nExtraZ>=1) )|| ( nCleanedJetsPt30==0 && nExtraLep>=1 ) )
@@ -492,14 +495,17 @@ void Analyzer :: Categorize(TString s1)
  
     else
     Histo_VBFH125->Fill(6.5,w); 
+		  }
 
 	  }
 	  if(s1.Contains("ttH125"))
 	  {
+	if(ZZMass>118 && ZZMass<130)
+	{		
 	if( nExtraLep==0 && (((nCleanedJetsPt30==2||nCleanedJetsPt30==3)&&nCleanedJetsPt30BTagged_bTagSF<=1)||(nCleanedJetsPt30>=4&&nCleanedJetsPt30BTagged_bTagSF==0)) && D_VBF2j>0.5 )
     Histo_ttH125->Fill(4.5,w);
 
-    else if( nExtraLep==0 && (nCleanedJetsPt30==2||nCleanedJetsPt30==3||(nCleanedJetsPt30>=4&&nCleanedJetsPt30BTagged_bTagSF==0)) && (D_WHh>0.9||D_ZHh>0.9) )
+    else if( nExtraLep==0 && (nCleanedJetsPt30==2||nCleanedJetsPt30==3||(nCleanedJetsPt30>=4&&nCleanedJetsPt30BTagged_bTagSF==0)) && (D_WHh>0.5||D_ZHh>0.5) )
     Histo_ttH125->Fill(3.5,w); 
 
     else if( ( nCleanedJetsPt30<=3 && nCleanedJetsPt30BTagged_bTagSF==0 && (nExtraLep==1||nExtraZ>=1) )|| ( nCleanedJetsPt30==0 && nExtraLep>=1 ) )
@@ -516,14 +522,17 @@ void Analyzer :: Categorize(TString s1)
  
     else
     Histo_ttH125->Fill(6.5,w); 
+	}
 	  }
 	  
 	  if(s1.Contains("ZZTo4lext1"))
 	  {
+    if(ZZMass>118 && ZZMass<130)
+	{	
 	if( nExtraLep==0 && (((nCleanedJetsPt30==2||nCleanedJetsPt30==3)&&nCleanedJetsPt30BTagged_bTagSF<=1)||(nCleanedJetsPt30>=4&&nCleanedJetsPt30BTagged_bTagSF==0)) && D_VBF2j>0.5 )
     Histo_ZZTo4lext1->Fill(4.5,w);
 
-    else if( nExtraLep==0 && (nCleanedJetsPt30==2||nCleanedJetsPt30==3||(nCleanedJetsPt30>=4&&nCleanedJetsPt30BTagged_bTagSF==0)) && (D_WHh>0.9||D_ZHh>0.9) )
+    else if( nExtraLep==0 && (nCleanedJetsPt30==2||nCleanedJetsPt30==3||(nCleanedJetsPt30>=4&&nCleanedJetsPt30BTagged_bTagSF==0)) && (D_WHh>0.5||D_ZHh>0.5) )
     Histo_ZZTo4lext1->Fill(3.5,w); 
 
     else if( ( nCleanedJetsPt30<=3 && nCleanedJetsPt30BTagged_bTagSF==0 && (nExtraLep==1||nExtraZ>=1) )|| ( nCleanedJetsPt30==0 && nExtraLep>=1 ) )
@@ -540,6 +549,7 @@ void Analyzer :: Categorize(TString s1)
  
     else
     Histo_ZZTo4lext1->Fill(6.5,w);
+	}
 	  }
   }
 }
@@ -547,12 +557,6 @@ void Analyzer :: Categorize(TString s1)
 void Analyzer :: Categorize_Display()
 {
 	int i;
-	//cout<<VBF_2j_ggH125<<" "<<VBF_2j_VBFH125<<" "<<VBF_2j_ttH125<<" "<<VBF_2j_ZZTo4lext1<<endl;
-	/*
-	cout<<Histo_VBF_2j_ggH125->Integral()<<" "<<Histo_VBF_2j_VBFH125->Integral()<<" "<<Histo_VBF_2j_ttH125->Integral()<<" "<<Histo_VBF_2j_ZZTo4lext1->Integral()<<endl;
-	cout<<Histo_VBF_1j_ggH125->Integral()<<" "<<Histo_VBF_1j_VBFH125->Integral()<<" "<<Histo_VBF_1j_ttH125->Integral()<<" "<<Histo_VBF_1j_ZZTo4lext1->Integral()<<endl;
-	cout<<Histo_VHh_ggH125->Integral()<<" "<<Histo_VHh_VBFH125->Integral()<<" "<<Histo_VHh_ttH125->Integral()<<" "<<Histo_VHh_ZZTo4lext1->Integral()<<endl;
-	*/
 	gStyle->SetOptStat(0);
 	const char *categories[7]={"ttH-leptonic tagged ","ttH-hadronic tagged ","VH-leptonic tagged ","VH-hadronic tagged ","VBF-2jet tagged "," VBF-1jet tagged"," Untagged"};
 	Histo_ggH125->SetTitle("ggH");
@@ -567,7 +571,7 @@ void Analyzer :: Categorize_Display()
 		Histo_ZZTo4lext1->GetXaxis()->SetBinLabel(i,categories[i-1]);
 	}
 	Histo_ggH125->SetFillColor(kBlue);
-	Histo_VBFH125->SetFillColor(kGreen);
+	Histo_VBFH125->SetFillColor(kGreen+2);
 	Histo_ttH125->SetFillColor(kMagenta);
 	Histo_ZZTo4lext1->SetFillColor(kRed);
 	Histo_ggH125->GetYaxis()->SetTitle("Expected events");
@@ -575,26 +579,105 @@ void Analyzer :: Categorize_Display()
 	Histo_ttH125->GetYaxis()->SetTitle("Expected events");
 	Histo_ZZTo4lext1->GetYaxis()->SetTitle("Expected events");
 	
-	TCanvas *canvas_categories_1=new TCanvas("ggH125","ggH125",800,800);
+	TCanvas *canvas_categories_1=new TCanvas("ggH125","ggH125",1400,800);
 	canvas_categories_1->Divide(2,2);
 	
+	Histo_ggH125->GetYaxis()->SetTitleSize(0.05);
+	Histo_ggH125->GetXaxis()->SetLabelSize(0.08);
+    Histo_ggH125->GetYaxis()->SetLabelSize(0.04);
+    Histo_ggH125->SetBarOffset(0.1);
+	Histo_ggH125->SetBarWidth(0.8);
 	canvas_categories_1->cd(1);
-	gPad->SetLeftMargin(0.25);
+	gPad->SetLeftMargin(0.35);
 	Histo_ggH125->Draw("hbar");
 	
+	Histo_VBFH125->GetYaxis()->SetTitleSize(0.05);
+	Histo_VBFH125->GetXaxis()->SetLabelSize(0.08);
+	Histo_VBFH125->GetYaxis()->SetLabelSize(0.04);
+	Histo_VBFH125->SetBarOffset(0.1);
+	Histo_VBFH125->SetBarWidth(0.8);
 	canvas_categories_1->cd(2);
 	gPad->SetLeftMargin(0.25);
 	Histo_VBFH125->Draw("hbar");
 	
+	Histo_ttH125->GetYaxis()->SetTitleSize(0.05);
+	Histo_ttH125->GetXaxis()->SetLabelSize(0.08);
+	Histo_ttH125->GetYaxis()->SetLabelSize(0.04);
+	Histo_ttH125->SetBarOffset(0.1);
+	Histo_ttH125->SetBarWidth(0.8);
 	canvas_categories_1->cd(3);
-	gPad->SetLeftMargin(0.25);
+	gPad->SetLeftMargin(0.35);
 	Histo_ttH125->Draw("hbar");
 	
+	Histo_ZZTo4lext1->GetYaxis()->SetTitleSize(0.05);
+	Histo_ZZTo4lext1->GetXaxis()->SetLabelSize(0.08);
+	Histo_ZZTo4lext1->GetYaxis()->SetLabelSize(0.04);
+	Histo_ZZTo4lext1->SetBarOffset(0.1);
+	Histo_ZZTo4lext1->SetBarWidth(0.8);
 	canvas_categories_1->cd(4);
 	gPad->SetLeftMargin(0.25);
+	Histo_ZZTo4lext1->GetYaxis()->SetRangeUser(0., 80.);
 	Histo_ZZTo4lext1->Draw("hbar");
 	
-	canvas_categories_1->SaveAs("Categorization_0.9_cut.pdf");
+	canvas_categories_1->SaveAs("Categorization.pdf");
+	
+	double VBF2j_exp_events=Histo_ggH125->Integral(5,5)+Histo_VBFH125->Integral(5,5)+Histo_ttH125->Integral(5,5)+Histo_ZZTo4lext1->Integral(5,5);
+	double VHh_exp_events=Histo_ggH125->Integral(4,4)+Histo_VBFH125->Integral(4,4)+Histo_ttH125->Integral(4,4)+Histo_ZZTo4lext1->Integral(4,4);
+	double VHl_exp_events=Histo_ggH125->Integral(3,3)+Histo_VBFH125->Integral(3,3)+Histo_ttH125->Integral(3,3)+Histo_ZZTo4lext1->Integral(3,3);
+	double ttHh_exp_events=Histo_ggH125->Integral(2,2)+Histo_VBFH125->Integral(2,2)+Histo_ttH125->Integral(2,2)+Histo_ZZTo4lext1->Integral(2,2);
+	double ttHl_exp_events=Histo_ggH125->Integral(1,1)+Histo_VBFH125->Integral(1,1)+Histo_ttH125->Integral(1,1)+Histo_ZZTo4lext1->Integral(1,1);
+	double VBF1j_exp_events=Histo_ggH125->Integral(6,6)+Histo_VBFH125->Integral(6,6)+Histo_ttH125->Integral(6,6)+Histo_ZZTo4lext1->Integral(6,6);
+	double Untagged_exp_events=Histo_ggH125->Integral(7,7)+Histo_VBFH125->Integral(7,7)+Histo_ttH125->Integral(7,7)+Histo_ZZTo4lext1->Integral(7,7);
+	
+	
+	double exp_events[7]={ttHl_exp_events,ttHh_exp_events,VHl_exp_events,VHh_exp_events,VBF2j_exp_events,VBF1j_exp_events,Untagged_exp_events};
+	
+	
+	for(i=1;i<=7;i++)
+	{
+	  Histo_ggH125->SetBinContent(i,Histo_ggH125->Integral(i,i)/exp_events[i-1]);	
+	  Histo_VBFH125->SetBinContent(i,Histo_VBFH125->Integral(i,i)/exp_events[i-1]);
+	  Histo_ttH125->SetBinContent(i,Histo_ttH125->Integral(i,i)/exp_events[i-1]);
+	  Histo_ZZTo4lext1->SetBinContent(i,Histo_ZZTo4lext1->Integral(i,i)/exp_events[i-1]);
+	}
+	THStack *stack = new THStack("stack","Categorization (simulation) ; ; Signal fraction");
+	TCanvas *master_canvas=new TCanvas("master","master",1400,800);
+	TLegend* legend=new TLegend(0.9,0.7,0.98,0.9);
+	legend->AddEntry(Histo_ggH125,"ggH","f");
+	legend->AddEntry(Histo_VBFH125,"VBFH","f");
+	legend->AddEntry(Histo_ttH125,"ttH","f");
+	legend->AddEntry(Histo_ZZTo4lext1,"qqZZ","f");
+	gPad->SetLeftMargin(0.2);
+	TLatex *t1=new TLatex(0.3,0.35,"0.62 exp. events");
+	TLatex *t2=new TLatex(0.3,1.35,"1.10 exp. events");
+	TLatex *t3=new TLatex(0.3,2.35,"1.16 exp. events");
+	TLatex *t4=new TLatex(0.3,3.35,"10.17 exp. events");
+	TLatex *t5=new TLatex(0.3,4.35,"12.28 exp. events");
+	TLatex *t6=new TLatex(0.3,5.35,"26.77 exp. events");
+	TLatex *t7=new TLatex(0.3,6.35,"235.09 exp. events");
+	t1->SetTextColor(kWhite);
+	t2->SetTextColor(kWhite);
+	t1->SetTextColor(kWhite);
+	t3->SetTextColor(kWhite);
+	t4->SetTextColor(kWhite);
+	t5->SetTextColor(kWhite);
+	t6->SetTextColor(kWhite);
+	t7->SetTextColor(kWhite);
+	stack->Add(Histo_ggH125);
+	stack->Add(Histo_VBFH125);
+	stack->Add(Histo_ttH125);
+	stack->Add(Histo_ZZTo4lext1);
+	stack->Draw("hbar");
+	legend->Draw();
+	t1->Draw();
+	t2->Draw();
+	t3->Draw();
+	t4->Draw();
+	t5->Draw();
+	t6->Draw();
+	t7->Draw();
+	master_canvas->SaveAs("Categorization_stack.pdf");
+	 
 }
    
  

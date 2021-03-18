@@ -16,6 +16,7 @@
 #include<TH2F.h>
 #include<TLegend.h>
 #include<TMath.h>
+#include<TLatex.h>
 
 // Header file for the classes stored in the TTree if any.
 #include <vector>
@@ -1500,21 +1501,7 @@ public :
 	TH1* Histo_DiJetMass_ZZTo4lext1 = new TH1F("DiJetMass_ZZTo4lext1", "DiJetMass_ZZTo4lext1", 40, 0, 1600);
 	
 	//Categories
-	TH1F *Histo_VBF_2j_ggH125=new TH1F("VBF_2j_ggH125","VBF_2j_ggH125",10,0,10);
-	TH1F *Histo_VBF_2j_VBFH125=new TH1F("VBF_2j_VBFH125","VBF_2j_VBFH125",10,0,10);
-	TH1F *Histo_VBF_2j_ttH125=new TH1F("VBF_2j_ttH125","VBF_2j_ttH125",10,0,10);
-	TH1F *Histo_VBF_2j_ZZTo4lext1=new TH1F("VBF_2j_ZZTo4lext1","VBF_2j_ZZTo4lext1",10,0,10);
-	
-	TH1F *Histo_VBF_1j_ggH125=new TH1F("VBF_1j_ggH125","VBF_1j_ggH125",10,0,10);
-	TH1F *Histo_VBF_1j_VBFH125=new TH1F("VBF_1j_VBFH125","VBF_1j_VBFH125",10,0,10);
-	TH1F *Histo_VBF_1j_ttH125=new TH1F("VBF_1j_ttH125","VBF_1j_ttH125",10,0,10);
-	TH1F *Histo_VBF_1j_ZZTo4lext1=new TH1F("VBF_1j_ZZTo4lext1","VBF_1j_ZZTo4lext1",10,0,10);
-	
-	TH1F *Histo_VHh_ggH125=new TH1F("VBF_1j_ggH125","VBF_1j_ggH125",10,0,10);
-	TH1F *Histo_VHh_VBFH125=new TH1F("VBF_1j_VBFH125","VBF_1j_VBFH125",10,0,10);
-	TH1F *Histo_VHh_ttH125=new TH1F("VBF_1j_ttH125","VBF_1j_ttH125",10,0,10);
-	TH1F *Histo_VHh_ZZTo4lext1=new TH1F("VBF_1j_ZZTo4lext1","VBF_1j_ZZTo4lext1",10,0,10);
-	
+	 
 	TH1F *Histo_ggH125=new TH1F("gH125","ggH125",7,0,7);
 	TH1F *Histo_VBFH125=new TH1F("VBFH125","VBFH125",7,0,7);
 	TH1F *Histo_ttH125=new TH1F("ttH125","ttH125",7,0,7);
@@ -1556,13 +1543,7 @@ Long64_t Analyzer::LoadTree(Long64_t entry)
 
 void Analyzer::Init(TTree *tree)
 {
-   // The Init() function is called when the selector needs to initialize
-   // a new tree or chain. Typically here the branch addresses and branch
-   // pointers of the tree will be set.
-   // It is normally not necessary to make changes to the generated
-   // code, but the routine can be extended by the user if needed.
-   // Init() will be called many times when running on PROOF
-   // (once per file to be processed).
+    
 
    // Set object pointer
    LepPt = 0;
@@ -2359,12 +2340,7 @@ void Analyzer::Init(TTree *tree)
 
 Bool_t Analyzer::Notify()
 {
-   // The Notify() function is called when a new file is opened. This
-   // can be either for a new TTree in a TChain or when when a new TTree
-   // is started when using PROOF. It is normally not necessary to make changes
-   // to the generated code, but the routine can be extended by the
-   // user if needed. The return value is currently not used.
-
+    
    return kTRUE;
 }
 
