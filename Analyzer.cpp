@@ -13,6 +13,7 @@
 #include<TGraph.h>
 #include<TGraphPainter.h>
 #include<TMath.h>
+#include "TSystem.h"
 #include "cConstants.h"
 #include <TFile.h>
 #include <cassert>
@@ -679,7 +680,153 @@ void Analyzer :: Categorize_Display()
 	master_canvas->SaveAs("Categorization_stack.pdf");
    //stack
 }
+ 
+void Analyzer :: TMVAMultiClass()
+{
+	// This loads the library
+   TMVA::Tools::Instance();
+ 
+   // to get access to the GUI and all tmva macros
+   //
+   //     TString tmva_dir(TString(gRootDir) + "/tmva");
+   //     if(gSystem->Getenv("TMVASYS"))
+   //        tmva_dir = TString(gSystem->Getenv("TMVASYS"));
+   //     gROOT->SetMacroPath(tmva_dir + "/test/:" + gROOT->GetMacroPath() );
+   //     gROOT->ProcessLine(".L TMVAMultiClassGui.C");
+ 
+ 
+   //---------------------------------------------------------------
+   // Default MVA methods to be trained + tested
+   std::map<std::string,int> Use;
+   Use["MLP"]             = 1;
+   Use["BDTG"]            = 1;
+#ifdef R__HAS_TMVAGPU
+   Use["DL_CPU"]          = 1;
+   Use["DL_GPU"]          = 1;
+#else
+   Use["DL_CPU"]          = 1;
+   Use["DL_GPU"]          = 0;
+#endif
+   Use["FDA_GA"]          = 0;
+   Use["PDEFoam"]         = 1;
+ 
+   //---------------------------------------------------------------
+ 
+  
+   // Create a new root output file.
+   TString outfileName = "TMVAMulticlass.root";
+   TFile* outputFile = TFile::Open( outfileName, "RECREATE" );
+ 
+   TMVA::Factory *factory = new TMVA::Factory( "TMVAMulticlass", outputFile,
+                                               "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P;G,D:AnalysisType=multiclass" );
+   TMVA::DataLoader *dataloader=new TMVA::DataLoader("dataset");
+ 
+   dataloader->AddVariable( "Z1Pt", 'F' );
+   dataloader->AddVariable( "Z2Pt", 'F' );
+   dataloader->AddVariable( "ZZPt", 'F' );
+   dataloader->AddVariable( "PhotonPt", 'F' );
+ 
+   TFile *input1(0);
+   TString fname1 = "/home/public/data/2018_MC/ggH125/ZZ4lAnalysis.root";
+   if (!gSystem->AccessPathName( fname1 )) {
+      input1 = TFile::Open( fname1 ); // check if file in local directory exists
+   }
+   if (!input1) {
+      std::cout << "ERROR: could not open data file" << std::endl;
+      exit(1);
+   }
+   TFile *input2(0);
+   TString fname2 = "/home/public/data/2018_MC/VBFH125/ZZ4lAnalysis.root";
+   if (!gSystem->AccessPathName( fname2 )) {
+      input2 = TFile::Open( fname2 ); // check if file in local directory exists
+   }
    
+   TFile *input3(0);
+   TString fname3 = "/home/public/data/2018_MC/ttH125/ZZ4lAnalysis.root";
+   if (!gSystem->AccessPathName( fname3 )) {
+      input3 = TFile::Open( fname3 ); // check if file in local directory exists
+   }
+   TFile *input4(0);
+   TString fname4 = "/home/public/data/2018_MC/ZZTo4lext1/ZZ4lAnalysis.root";
+   if (!gSystem->AccessPathName( fname4 )) {
+      input4 = TFile::Open( fname4 ); // check if file in local directory exists
+   }
+    
+   TTree *signalTree  = (TTree*)input1->Get("ZZTree/candTree");
+   TTree *background0 = (TTree*)input2->Get("ZZTree/candTree");
+   TTree *background1 = (TTree*)input3->Get("ZZTree/candTree");
+   TTree *background2 = (TTree*)input4->Get("ZZTree/candTree");
+   
+    
+ 
+   gROOT->cd( outfileName+TString(":/") );
+   dataloader->AddTree(signalTree,"Signal");
+   dataloader->AddTree(background0,"bg0");
+   dataloader->AddTree(background1,"bg1");
+   dataloader->AddTree(background2,"bg2");
+ 
+   dataloader->PrepareTrainingAndTestTree( "", "SplitMode=Random:NormMode=NumEvents:!V" );
+ 
+   /*if (Use["BDTG"]) // gradient boosted decision trees
+      factory->BookMethod( dataloader,  TMVA::Types::kBDT, "BDTG", "!H:!V:NTrees=1000:BoostType=Grad:Shrinkage=0.10:UseBaggedBoost:BaggedSampleFraction=0.50:nCuts=20:MaxDepth=2");
+   if (Use["MLP"]) // neural network
+      factory->BookMethod( dataloader,  TMVA::Types::kMLP, "MLP", "!H:!V:NeuronType=tanh:NCycles=1000:HiddenLayers=N+5,5:TestRate=5:EstimatorType=MSE");
+   if (Use["FDA_GA"]) // functional discriminant with GA minimizer
+      factory->BookMethod( dataloader,  TMVA::Types::kFDA, "FDA_GA", "H:!V:Formula=(0)+(1)*x0+(2)*x1+(3)*x2+(4)*x3:ParRanges=(-1,1);(-10,10);(-10,10);(-10,10);(-10,10):FitMethod=GA:PopSize=300:Cycles=3:Steps=20:Trim=True:SaveBestGen=1" );
+   if (Use["PDEFoam"]) // PDE-Foam approach
+      factory->BookMethod( dataloader,  TMVA::Types::kPDEFoam, "PDEFoam", "!H:!V:TailCut=0.001:VolFrac=0.0666:nActiveCells=500:nSampl=2000:nBin=5:Nmin=100:Kernel=None:Compress=T" );
+ 
+ 
+   if (Use["DL_CPU"]) {
+      TString layoutString("Layout=TANH|100,TANH|50,TANH|10,LINEAR");
+      TString trainingStrategyString("TrainingStrategy=Optimizer=ADAM,LearningRate=1e-3,"
+                                     "TestRepetitions=1,ConvergenceSteps=10,BatchSize=100");
+      TString nnOptions("!H:V:ErrorStrategy=CROSSENTROPY:VarTransform=N:"
+                        "WeightInitialization=XAVIERUNIFORM:Architecture=GPU");
+      nnOptions.Append(":");
+      nnOptions.Append(layoutString);
+      nnOptions.Append(":");
+      nnOptions.Append(trainingStrategyString);
+      factory->BookMethod(dataloader, TMVA::Types::kDL, "DL_CPU", nnOptions);
+   }
+   if (Use["DL_GPU"]) {
+      TString layoutString("Layout=TANH|100,TANH|50,TANH|10,LINEAR");
+      TString trainingStrategyString("TrainingStrategy=Optimizer=ADAM,LearningRate=1e-3,"
+                                     "TestRepetitions=1,ConvergenceSteps=10,BatchSize=100");
+      TString nnOptions("!H:V:ErrorStrategy=CROSSENTROPY:VarTransform=N:"
+                        "WeightInitialization=XAVIERUNIFORM:Architecture=GPU");
+      nnOptions.Append(":");
+      nnOptions.Append(layoutString);
+      nnOptions.Append(":");
+      nnOptions.Append(trainingStrategyString);
+      factory->BookMethod(dataloader, TMVA::Types::kDL, "DL_GPU", nnOptions);
+   }
+ 
+ 
+   // Train MVAs using the set of training events
+   factory->TrainAllMethods();
+ 
+   // Evaluate all MVAs using the set of test events
+   factory->TestAllMethods();
+ 
+   // Evaluate and compare performance of all configured MVAs
+   factory->EvaluateAllMethods();
+ 
+   // --------------------------------------------------------------
+ 
+   // Save the output
+   outputFile->Close();
+ 
+   std::cout << "==> Wrote root file: " << outputFile->GetName() << std::endl;
+   std::cout << "==> TMVAMulticlass is done!" << std::endl;
+ 
+   delete factory;
+   delete dataloader;
+ 
+   // Launch the GUI for the root macros
+   if (!gROOT->IsBatch()) TMVAMultiClassGui( outfileName );*/
+ 
+}	
  
 
 

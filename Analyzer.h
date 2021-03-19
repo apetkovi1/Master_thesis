@@ -17,6 +17,13 @@
 #include<TLegend.h>
 #include<TMath.h>
 #include<TLatex.h>
+#include "TTree.h"
+
+// Headers for TMVA
+#include "TMVA/Factory.h"
+#include "TMVA/DataLoader.h"
+#include "TMVA/Tools.h"
+//#include "TMVA/TMVAMultiClassGui.h"
 
 // Header file for the classes stored in the TTree if any.
 #include <vector>
@@ -1444,6 +1451,7 @@ public :
    virtual void Plot_Histogram();
    virtual void Categorize(TString s1);
    virtual void Categorize_Display();
+   virtual void TMVAMultiClass();
    public:
    	TTree *tree;
    	TH1F* h1; //dodano

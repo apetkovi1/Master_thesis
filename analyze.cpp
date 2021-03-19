@@ -16,10 +16,11 @@ int main()
     object1->Fill_Histogram("/home/public/data/2018_MC/VBFH125/ZZ4lAnalysis.root");
     object1->Fill_Histogram("/home/public/data/2018_MC/ttH125/ZZ4lAnalysis.root");
 	object1->Fill_Histogram("/home/public/data/2018_MC/ZZTo4lext1/ZZ4lAnalysis.root");
-	object1->Plot_Histogram();*/
+	object1->Plot_Histogram();
 	object1->Categorize("/home/public/data/2018_MC/ggH125/ZZ4lAnalysis.root");
     object1->Categorize("/home/public/data/2018_MC/VBFH125/ZZ4lAnalysis.root");
     object1->Categorize("/home/public/data/2018_MC/ttH125/ZZ4lAnalysis.root");
 	object1->Categorize("/home/public/data/2018_MC/ZZTo4lext1/ZZ4lAnalysis.root");
-    object1->Categorize_Display();	
+    object1->Categorize_Display();*/
+    object1->TMVAMultiClass();	
 }
