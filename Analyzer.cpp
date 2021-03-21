@@ -419,7 +419,7 @@ void Analyzer :: Plot_Histogram()
 
 void Analyzer :: Categorize(TString s1)
 {
-	 
+	
 	TFile *f;  
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.  
@@ -448,7 +448,7 @@ void Analyzer :: Categorize(TString s1)
 	  if(s1.Contains("ggH125"))
 	  {
 	if(ZZMass>118 && ZZMass<130)
-	{		
+	{	
 	if( nExtraLep==0 && (((nCleanedJetsPt30==2||nCleanedJetsPt30==3)&&nCleanedJetsPt30BTagged_bTagSF<=1)||(nCleanedJetsPt30>=4&&nCleanedJetsPt30BTagged_bTagSF==0)) && D_VBF2j>0.5 )
     Histo_ggH125->Fill(4.5,w);
 
@@ -528,6 +528,7 @@ void Analyzer :: Categorize(TString s1)
 	  
 	  if(s1.Contains("ZZTo4lext1"))
 	  {
+
     if(ZZMass>118 && ZZMass<130)
 	{	
 	if( nExtraLep==0 && (((nCleanedJetsPt30==2||nCleanedJetsPt30==3)&&nCleanedJetsPt30BTagged_bTagSF<=1)||(nCleanedJetsPt30>=4&&nCleanedJetsPt30BTagged_bTagSF==0)) && D_VBF2j>0.5 )
@@ -721,11 +722,17 @@ void Analyzer :: TMVAMultiClass()
                                                "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P;G,D:AnalysisType=multiclass" );
    TMVA::DataLoader *dataloader=new TMVA::DataLoader("dataset");
  
-   dataloader->AddVariable( "Z1Pt", 'F' );
-   dataloader->AddVariable( "Z2Pt", 'F' );
-   dataloader->AddVariable( "ZZPt", 'F' );
-   dataloader->AddVariable( "PhotonPt", 'F' );
- 
+   dataloader->AddVariable( "D_VBF2j:=1./(1.+ p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal/p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal)", 'F' );
+   dataloader->AddVariable("D_VBF1j := 1./(1.+p_JQCD_SIG_ghg2_1_JHUGen_JECNominal/(p_JVBF_SIG_ghv1_1_JHUGen_JECNominal*pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal))",'F');
+   dataloader->AddVariable("D_WHh := 1./(1.+ (p_HadWH_mavjj_true_JECNominal*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal)/(p_HadWH_mavjj_JECNominal*p_HadWH_SIG_ghw1_1_JHUGen_JECNominal))",'F');
+   dataloader->AddVariable("D_ZHh := 1./(1.+ (p_HadZH_mavjj_true_JECNominal*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal)/(p_HadZH_mavjj_JECNominal*p_HadZH_SIG_ghz1_1_JHUGen_JECNominal))",'F');
+   
+   dataloader->AddVariable("ZZMass",'F');
+   dataloader->AddVariable( "nCleanedJetsPt30BTagged", 'F' );
+   dataloader->AddVariable( "nExtraLep", 'F' );
+   dataloader->AddVariable( "nCleanedJetsPt30", 'F' );
+   
+   
    TFile *input1(0);
    TString fname1 = "/home/public/data/2018_MC/ggH125/ZZ4lAnalysis.root";
    if (!gSystem->AccessPathName( fname1 )) {
@@ -752,21 +759,29 @@ void Analyzer :: TMVAMultiClass()
       input4 = TFile::Open( fname4 ); // check if file in local directory exists
    }
     
-   TTree *signalTree  = (TTree*)input1->Get("ZZTree/candTree");
-   TTree *background0 = (TTree*)input2->Get("ZZTree/candTree");
-   TTree *background1 = (TTree*)input3->Get("ZZTree/candTree");
-   TTree *background2 = (TTree*)input4->Get("ZZTree/candTree");
+   TTree *Tree_ggH  = (TTree*)input1->Get("ZZTree/candTree");
+   TTree *Tree_VBFH = (TTree*)input2->Get("ZZTree/candTree");
+   TTree *Tree_ttH = (TTree*)input3->Get("ZZTree/candTree");
+   TTree *Tree_qqZZ = (TTree*)input4->Get("ZZTree/candTree");
+       
    
-    
- 
    gROOT->cd( outfileName+TString(":/") );
-   dataloader->AddTree(signalTree,"Signal");
-   dataloader->AddTree(background0,"bg0");
-   dataloader->AddTree(background1,"bg1");
-   dataloader->AddTree(background2,"bg2");
- 
-   dataloader->PrepareTrainingAndTestTree( "", "SplitMode=Random:NormMode=NumEvents:!V" );
- 
+   dataloader->AddTree(Tree_ggH,"ggH");
+   dataloader->AddTree(Tree_VBFH,"VBFH");
+   dataloader->AddTree(Tree_ttH,"ttH");
+   dataloader->AddTree(Tree_qqZZ,"qqZZ");
+   
+   dataloader->SetWeightExpression ("137000/28744188*xsec*overallEventWeight","ggH");
+   dataloader->SetWeightExpression ("137000/1819984.75*xsec*overallEventWeight","VBFH");
+   dataloader->SetWeightExpression ("137000/257544.9375*xsec*overallEventWeight","ttH");
+   dataloader->SetWeightExpression ("137000/8398762*xsec*overallEventWeight","qqZZ");
+   
+    TCut cut="ZZMass>118 && ZZMass<130";
+    dataloader->PrepareTrainingAndTestTree(cut, "SplitMode=Random:NormMode=NumEvents:!V" );
+   
+   //dataloader->PrepareTrainingAndTestTree(cut,"nTrain_ggH=1000:nTrain_VBFH=1000:nTrain_ttH=1000:nTrain_qqZZ=1000:SplitMode=Random:NormMode=NumEvents:!V" );
+   factory->BookMethod( dataloader,  TMVA::Types::kBDT, "BDTG", "!H:!V:NTrees=1000:BoostType=Grad:Shrinkage=0.10:UseBaggedBoost:BaggedSampleFraction=0.50:nCuts=20:MaxDepth=2");
+   
    /*if (Use["BDTG"]) // gradient boosted decision trees
       factory->BookMethod( dataloader,  TMVA::Types::kBDT, "BDTG", "!H:!V:NTrees=1000:BoostType=Grad:Shrinkage=0.10:UseBaggedBoost:BaggedSampleFraction=0.50:nCuts=20:MaxDepth=2");
    if (Use["MLP"]) // neural network
@@ -800,7 +815,7 @@ void Analyzer :: TMVAMultiClass()
       nnOptions.Append(":");
       nnOptions.Append(trainingStrategyString);
       factory->BookMethod(dataloader, TMVA::Types::kDL, "DL_GPU", nnOptions);
-   }
+   }*/
  
  
    // Train MVAs using the set of training events
@@ -824,7 +839,7 @@ void Analyzer :: TMVAMultiClass()
    delete dataloader;
  
    // Launch the GUI for the root macros
-   if (!gROOT->IsBatch()) TMVAMultiClassGui( outfileName );*/
+   //if (!gROOT->IsBatch()) TMVAMultiClassGui( outfileName ); 
  
 }	
  
