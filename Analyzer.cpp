@@ -687,32 +687,8 @@ void Analyzer :: TMVAMultiClass()
 	// This loads the library
    TMVA::Tools::Instance();
  
-   // to get access to the GUI and all tmva macros
-   //
-   //     TString tmva_dir(TString(gRootDir) + "/tmva");
-   //     if(gSystem->Getenv("TMVASYS"))
-   //        tmva_dir = TString(gSystem->Getenv("TMVASYS"));
-   //     gROOT->SetMacroPath(tmva_dir + "/test/:" + gROOT->GetMacroPath() );
-   //     gROOT->ProcessLine(".L TMVAMultiClassGui.C");
- 
- 
-   //---------------------------------------------------------------
-   // Default MVA methods to be trained + tested
-   std::map<std::string,int> Use;
-   Use["MLP"]             = 1;
-   Use["BDTG"]            = 1;
-#ifdef R__HAS_TMVAGPU
-   Use["DL_CPU"]          = 1;
-   Use["DL_GPU"]          = 1;
-#else
-   Use["DL_CPU"]          = 1;
-   Use["DL_GPU"]          = 0;
-#endif
-   Use["FDA_GA"]          = 0;
-   Use["PDEFoam"]         = 1;
- 
-   //---------------------------------------------------------------
- 
+    
+    
   
    // Create a new root output file.
    TString outfileName = "TMVAMulticlass.root";
@@ -724,9 +700,9 @@ void Analyzer :: TMVAMultiClass()
  
    dataloader->AddVariable( "D_VBF2j:=1./(1.+ p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal/p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal)", 'F' );
    dataloader->AddVariable("D_VBF1j := 1./(1.+p_JQCD_SIG_ghg2_1_JHUGen_JECNominal/(p_JVBF_SIG_ghv1_1_JHUGen_JECNominal*pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal))",'F');
-   dataloader->AddVariable("D_WHh := 1./(1.+ (p_HadWH_mavjj_true_JECNominal*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal)/(p_HadWH_mavjj_JECNominal*p_HadWH_SIG_ghw1_1_JHUGen_JECNominal))",'F');
-   dataloader->AddVariable("D_ZHh := 1./(1.+ (p_HadZH_mavjj_true_JECNominal*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal)/(p_HadZH_mavjj_JECNominal*p_HadZH_SIG_ghz1_1_JHUGen_JECNominal))",'F');
-   
+   //dataloader->AddVariable("D_WHh := 1./(1.+ (p_HadWH_mavjj_true_JECNominal*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal)/(p_HadWH_mavjj_JECNominal*p_HadWH_SIG_ghw1_1_JHUGen_JECNominal))",'F');
+   //dataloader->AddVariable("D_ZHh := 1./(1.+ (p_HadZH_mavjj_true_JECNominal*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal)/(p_HadZH_mavjj_JECNominal*p_HadZH_SIG_ghz1_1_JHUGen_JECNominal))",'F');
+      
    dataloader->AddVariable("ZZMass",'F');
    dataloader->AddVariable( "nCleanedJetsPt30BTagged", 'F' );
    dataloader->AddVariable( "nExtraLep", 'F' );
@@ -782,41 +758,6 @@ void Analyzer :: TMVAMultiClass()
    //dataloader->PrepareTrainingAndTestTree(cut,"nTrain_ggH=1000:nTrain_VBFH=1000:nTrain_ttH=1000:nTrain_qqZZ=1000:SplitMode=Random:NormMode=NumEvents:!V" );
    factory->BookMethod( dataloader,  TMVA::Types::kBDT, "BDTG", "!H:!V:NTrees=1000:BoostType=Grad:Shrinkage=0.10:UseBaggedBoost:BaggedSampleFraction=0.50:nCuts=20:MaxDepth=2");
    
-   /*if (Use["BDTG"]) // gradient boosted decision trees
-      factory->BookMethod( dataloader,  TMVA::Types::kBDT, "BDTG", "!H:!V:NTrees=1000:BoostType=Grad:Shrinkage=0.10:UseBaggedBoost:BaggedSampleFraction=0.50:nCuts=20:MaxDepth=2");
-   if (Use["MLP"]) // neural network
-      factory->BookMethod( dataloader,  TMVA::Types::kMLP, "MLP", "!H:!V:NeuronType=tanh:NCycles=1000:HiddenLayers=N+5,5:TestRate=5:EstimatorType=MSE");
-   if (Use["FDA_GA"]) // functional discriminant with GA minimizer
-      factory->BookMethod( dataloader,  TMVA::Types::kFDA, "FDA_GA", "H:!V:Formula=(0)+(1)*x0+(2)*x1+(3)*x2+(4)*x3:ParRanges=(-1,1);(-10,10);(-10,10);(-10,10);(-10,10):FitMethod=GA:PopSize=300:Cycles=3:Steps=20:Trim=True:SaveBestGen=1" );
-   if (Use["PDEFoam"]) // PDE-Foam approach
-      factory->BookMethod( dataloader,  TMVA::Types::kPDEFoam, "PDEFoam", "!H:!V:TailCut=0.001:VolFrac=0.0666:nActiveCells=500:nSampl=2000:nBin=5:Nmin=100:Kernel=None:Compress=T" );
- 
- 
-   if (Use["DL_CPU"]) {
-      TString layoutString("Layout=TANH|100,TANH|50,TANH|10,LINEAR");
-      TString trainingStrategyString("TrainingStrategy=Optimizer=ADAM,LearningRate=1e-3,"
-                                     "TestRepetitions=1,ConvergenceSteps=10,BatchSize=100");
-      TString nnOptions("!H:V:ErrorStrategy=CROSSENTROPY:VarTransform=N:"
-                        "WeightInitialization=XAVIERUNIFORM:Architecture=GPU");
-      nnOptions.Append(":");
-      nnOptions.Append(layoutString);
-      nnOptions.Append(":");
-      nnOptions.Append(trainingStrategyString);
-      factory->BookMethod(dataloader, TMVA::Types::kDL, "DL_CPU", nnOptions);
-   }
-   if (Use["DL_GPU"]) {
-      TString layoutString("Layout=TANH|100,TANH|50,TANH|10,LINEAR");
-      TString trainingStrategyString("TrainingStrategy=Optimizer=ADAM,LearningRate=1e-3,"
-                                     "TestRepetitions=1,ConvergenceSteps=10,BatchSize=100");
-      TString nnOptions("!H:V:ErrorStrategy=CROSSENTROPY:VarTransform=N:"
-                        "WeightInitialization=XAVIERUNIFORM:Architecture=GPU");
-      nnOptions.Append(":");
-      nnOptions.Append(layoutString);
-      nnOptions.Append(":");
-      nnOptions.Append(trainingStrategyString);
-      factory->BookMethod(dataloader, TMVA::Types::kDL, "DL_GPU", nnOptions);
-   }*/
- 
  
    // Train MVAs using the set of training events
    factory->TrainAllMethods();
