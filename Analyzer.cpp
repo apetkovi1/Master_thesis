@@ -685,7 +685,7 @@ void Analyzer :: Categorize_Display()
 void Analyzer :: TMVAMultiClass()
 {
 	// This loads the library
-   TMVA::Tools::Instance();
+  /* TMVA::Tools::Instance();
  
     
     
@@ -696,13 +696,23 @@ void Analyzer :: TMVAMultiClass()
  
    TMVA::Factory *factory = new TMVA::Factory( "TMVAMulticlass", outputFile,
                                                "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P;G,D:AnalysisType=multiclass" );
-   TMVA::DataLoader *dataloader=new TMVA::DataLoader("dataset");
+   TMVA::DataLoader *dataloader=new TMVA::DataLoader("dataset");  
  
-   dataloader->AddVariable( "D_VBF2j:=1./(1.+ p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal/p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal)", 'F' );
-   dataloader->AddVariable("D_VBF1j := 1./(1.+p_JQCD_SIG_ghg2_1_JHUGen_JECNominal/(p_JVBF_SIG_ghv1_1_JHUGen_JECNominal*pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal))",'F');
+   //dataloader->AddVariable( "D_VBF2j:=1./(1.+ p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal/p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal)", 'F' );
+   //dataloader->AddVariable("D_VBF1j := 1./(1.+p_JQCD_SIG_ghg2_1_JHUGen_JECNominal/(p_JVBF_SIG_ghv1_1_JHUGen_JECNominal*pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal))",'F');
    //dataloader->AddVariable("D_WHh := 1./(1.+ (p_HadWH_mavjj_true_JECNominal*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal)/(p_HadWH_mavjj_JECNominal*p_HadWH_SIG_ghw1_1_JHUGen_JECNominal))",'F');
    //dataloader->AddVariable("D_ZHh := 1./(1.+ (p_HadZH_mavjj_true_JECNominal*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal)/(p_HadZH_mavjj_JECNominal*p_HadZH_SIG_ghz1_1_JHUGen_JECNominal))",'F');
-      
+   //dataloader->AddVariable("1.0/(1+(1*p_QQB_BKG_MCFM)/p_GG_SIG_ghg2_1_ghz1_1_JHUGen)",'F');  // separator za qqZZ 
+
+    dataloader->AddVariable("p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal",'F');
+    dataloader->AddVariable("p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal",'F');
+    dataloader->AddVariable("p_JQCD_SIG_ghg2_1_JHUGen_JECNominal",'F');
+    dataloader->AddVariable("p_JVBF_SIG_ghv1_1_JHUGen_JECNominal",'F');
+    dataloader->AddVariable("pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal",'F');
+     
+     
+     	
+	
    dataloader->AddVariable("ZZMass",'F');
    dataloader->AddVariable( "nCleanedJetsPt30BTagged", 'F' );
    dataloader->AddVariable( "nExtraLep", 'F' );
@@ -745,19 +755,18 @@ void Analyzer :: TMVAMultiClass()
    dataloader->AddTree(Tree_ggH,"ggH");
    dataloader->AddTree(Tree_VBFH,"VBFH");
    dataloader->AddTree(Tree_ttH,"ttH");
-   dataloader->AddTree(Tree_qqZZ,"qqZZ");
+   //dataloader->AddTree(Tree_qqZZ,"qqZZ");
    
    dataloader->SetWeightExpression ("137000/28744188*xsec*overallEventWeight","ggH");
    dataloader->SetWeightExpression ("137000/1819984.75*xsec*overallEventWeight","VBFH");
    dataloader->SetWeightExpression ("137000/257544.9375*xsec*overallEventWeight","ttH");
-   dataloader->SetWeightExpression ("137000/8398762*xsec*overallEventWeight","qqZZ");
+   //dataloader->SetWeightExpression ("137000/8398762*xsec*overallEventWeight","qqZZ");
    
     TCut cut="ZZMass>118 && ZZMass<130";
     dataloader->PrepareTrainingAndTestTree(cut, "SplitMode=Random:NormMode=NumEvents:!V" );
-   
-   //dataloader->PrepareTrainingAndTestTree(cut,"nTrain_ggH=1000:nTrain_VBFH=1000:nTrain_ttH=1000:nTrain_qqZZ=1000:SplitMode=Random:NormMode=NumEvents:!V" );
+   //dataloader->PrepareTrainingAndTestTree(cut, "nTrain_ggH=1000:nTrain_VBFH=1000:nTrain_ttH=1000:SplitMode=Random:NormMode=NumEvents:!V" );
+ 
    factory->BookMethod( dataloader,  TMVA::Types::kBDT, "BDTG", "!H:!V:NTrees=1000:BoostType=Grad:Shrinkage=0.10:UseBaggedBoost:BaggedSampleFraction=0.50:nCuts=20:MaxDepth=2");
-   
  
    // Train MVAs using the set of training events
    factory->TrainAllMethods();
@@ -769,20 +778,172 @@ void Analyzer :: TMVAMultiClass()
    factory->EvaluateAllMethods();
  
    // --------------------------------------------------------------
- 
+    
    // Save the output
    outputFile->Close();
  
    std::cout << "==> Wrote root file: " << outputFile->GetName() << std::endl;
    std::cout << "==> TMVAMulticlass is done!" << std::endl;
- 
-   delete factory;
-   delete dataloader;
- 
-   // Launch the GUI for the root macros
-   //if (!gROOT->IsBatch()) TMVAMultiClassGui( outfileName ); 
- 
-}	
- 
+   
+   */
+   TCanvas *canvas1;
+   canvas1= new TCanvas("","",1600,900);
+   TFile *f1 = new TFile("TMVAMulticlass.root"); //treba bit malo c
+   TH1F* a = (TH1F*)f1->Get("dataset/Method_BDT/BDTG/MVA_BDTG_Test_ggH_prob_for_ggH");
+   TH1F* b = (TH1F*)f1->Get("dataset/Method_BDT/BDTG/MVA_BDTG_Test_VBFH_prob_for_ggH");
+   TH1F* c = (TH1F*)f1->Get("dataset/Method_BDT/BDTG/MVA_BDTG_Test_ttH_prob_for_ggH");
+   TH1F* d = (TH1F*)f1->Get("dataset/Method_BDT/BDTG/MVA_BDTG_Test_ggH_prob_for_VBFH");
+   TH1F* e = (TH1F*)f1->Get("dataset/Method_BDT/BDTG/MVA_BDTG_Test_VBFH_prob_for_VBFH");
+   TH1F* f = (TH1F*)f1->Get("dataset/Method_BDT/BDTG/MVA_BDTG_Test_ttH_prob_for_VBFH");
+   TH1F* g = (TH1F*)f1->Get("dataset/Method_BDT/BDTG/MVA_BDTG_Test_ggH_prob_for_ttH");
+   TH1F* h = (TH1F*)f1->Get("dataset/Method_BDT/BDTG/MVA_BDTG_Test_VBFH_prob_for_ttH");
+   TH1F* i = (TH1F*)f1->Get("dataset/Method_BDT/BDTG/MVA_BDTG_Test_ttH_prob_for_ttH");
+   a->GetYaxis()->SetRangeUser(0,5);
+   c->GetYaxis()->SetRangeUser(0,38);
+   d->GetYaxis()->SetRangeUser(0,5);
+   i->GetYaxis()->SetRangeUser(0,6);
+   canvas1->Divide(3,3);
+   canvas1->cd(1);
+   a->SetFillColor(kBlue);
+   b->SetFillColor(kBlue);
+   c->SetFillColor(kBlue);
+   d->SetFillColor(kBlue);
+   e->SetFillColor(kBlue);
+   f->SetFillColor(kBlue);
+   g->SetFillColor(kBlue);
+   h->SetFillColor(kBlue);
+   i->SetFillColor(kBlue);
+   a->Draw("BAR");
+   canvas1->cd(2);
+   b->Draw("BAR");
+   canvas1->cd(3);
+   c->Draw("BAR");
+   canvas1->cd(4);
+   d->Draw("BAR");
+   canvas1->cd(5);
+   e->Draw("BAR");
+   canvas1->cd(6);
+   f->Draw("BAR");
+   canvas1->cd(7);
+   g->Draw("BAR");
+   canvas1->cd(8);
+   h->Draw("BAR");
+   canvas1->cd(9);
+   i->Draw("BAR");
+   canvas1->SaveAs("BDT_distributions.pdf"); 
+   //delete factory;
+   //delete dataloader;
+   
+   //TTreeReader reader("dataset/TrainTree",  TFile::Open("TMVAMulticlass.root"));
+   //TTreeReaderValue<Float_t> reader_bdtg(reader, "BDTG");
+   //while (reader.Next()) {std::cout << *reader_bdtg.Get() << std::endl;} 
+}
+
+void Analyzer :: TMVAMultiClassApplication()
+{
+	
+   TMVA::Tools::Instance();
+   
+   std::map<std::string,int> Use;
+   Use["BDTG"]            = 1;
+   // create the Reader object
+   TMVA::Reader *reader = new TMVA::Reader( "!Color:!Silent" );
+   // create a set of variables and declare them to the reader
+   // - the variable names must corresponds in name and type to
+   // those given in the weight file(s) that you use
+   Float_t  D_VBF2j, D_VBF1j, ZZMass,p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal, p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal,nCleanedJetsPt30BTagged, nExtraLep, nCleanedJetsPt30,
+   p_JQCD_SIG_ghg2_1_JHUGen_JECNominal,p_JVBF_SIG_ghv1_1_JHUGen_JECNominal,pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal,ZZPt;
+   
+   Short_t a,b,c;
+   
+   //reader->AddVariable( "D_VBF2j:=1./(1.+ p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal/p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal)", &D_VBF2j );
+   //reader->AddVariable( "D_VBF1j:= 1./(1.+p_JQCD_SIG_ghg2_1_JHUGen_JECNominal/(p_JVBF_SIG_ghv1_1_JHUGen_JECNominal*pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal))", &D_VBF1j );
+   reader->AddVariable( "p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal", &p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal );
+   reader->AddVariable( "p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal", &p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal );
+   reader->AddVariable( "p_JQCD_SIG_ghg2_1_JHUGen_JECNominal", &p_JQCD_SIG_ghg2_1_JHUGen_JECNominal );
+   reader->AddVariable( "p_JVBF_SIG_ghv1_1_JHUGen_JECNominal", &p_JVBF_SIG_ghv1_1_JHUGen_JECNominal );
+   reader->AddVariable( "pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal", &pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal );
+   reader->AddVariable( "ZZMass", &ZZMass );
+   reader->AddVariable( "nCleanedJetsPt30BTagged", &nCleanedJetsPt30BTagged );
+   reader->AddVariable( "nExtraLep", &nExtraLep );
+   reader->AddVariable( "nCleanedJetsPt30", &nCleanedJetsPt30);
+   // book the MVA methods
+   TString dir    = "dataset/weights/";
+   TString prefix = "TMVAMulticlass";
+   for (std::map<std::string,int>::iterator it = Use.begin(); it != Use.end(); it++) {
+      if (it->second) {
+        TString methodName = TString(it->first) + TString(" method");
+        TString weightfile = dir + prefix + TString("_") + TString(it->first) + TString(".weights.xml");
+        reader->BookMVA( methodName, weightfile );
+      }
+   }
+   // book output histograms 
+   UInt_t nbin = 100;
+   TH1F  *histBDTG_ggH(0);
+   histBDTG_ggH  = new TH1F( "MVA_BDTG_ggH",   "MVA_BDTG_ggH",   nbin, 0., 1.1 );
+   TFile *input(0);
+   TString fname = "/home/public/data/2018_MC/ggH125/ZZ4lAnalysis.root";
+   if (!gSystem->AccessPathName( fname )) {
+      input = TFile::Open( fname ); // check if file in local directory exists
+   }
+   if (!input) {
+      std::cout << "ERROR: could not open data file, please generate example data first!" << std::endl;
+      exit(1);
+   }
+   std::cout << "--- TMVAMulticlassApp : Using input file: " << input->GetName() << std::endl;
+   // prepare the tree
+   // - here the variable names have to corresponds to your tree
+   // - you can use the same variables as above which is slightly faster,
+   //   but of course you can use different ones and copy the values inside the event loop   
+   TTree* theTree = (TTree*)input->Get("ZZTree/candTree");
+   std::cout << "--- Select ggH sample" << std::endl;
+   theTree->SetBranchAddress( "p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal", &p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal );
+   theTree->SetBranchAddress( "p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal", &p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal );
+   theTree->SetBranchAddress( "p_JQCD_SIG_ghg2_1_JHUGen_JECNominal", &p_JQCD_SIG_ghg2_1_JHUGen_JECNominal );
+   theTree->SetBranchAddress( "p_JVBF_SIG_ghv1_1_JHUGen_JECNominal", &p_JVBF_SIG_ghv1_1_JHUGen_JECNominal );
+   theTree->SetBranchAddress( "pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal", &pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal );
+   theTree->SetBranchAddress( "ZZMass", &ZZMass );
+   theTree->SetBranchAddress( "nCleanedJetsPt30BTagged", &a );
+   theTree->SetBranchAddress( "nExtraLep", &b );
+   theTree->SetBranchAddress( "nCleanedJetsPt30", &c );
+   std::cout << "--- Processing: " << theTree->GetEntries() << " events" << std::endl;
+   TStopwatch sw;
+   sw.Start();
+   for (Long64_t ievt=0; ievt<theTree->GetEntries();ievt++) {
+      if (ievt%1000 == 0){
+         std::cout << "--- ... Processing event: " << ievt << std::endl;
+      }
+      theTree->GetEntry(ievt);
+	  //D_VBF2j=1./(1.+ p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal/p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal);
+	  //D_VBF1j= 1./(1.+p_JQCD_SIG_ghg2_1_JHUGen_JECNominal/(p_JVBF_SIG_ghv1_1_JHUGen_JECNominal*pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal)); 
+      	nCleanedJetsPt30BTagged=a;	
+		nExtraLep=b;
+		nCleanedJetsPt30=c;
+        histBDTG_ggH->Fill((reader->EvaluateMulticlass( "BDTG method" ))[0]);				
+   }
+    
+   
+   // get elapsed time
+   sw.Stop();
+   std::cout << "--- End of event loop: "; sw.Print();
+   TFile *target  = new TFile( "TMVAMulticlassApp.root","RECREATE" );
+    
+   histBDTG_ggH->Write();
+    
+   target->Close();
+   std::cout << "--- Created root file: \"TMVMulticlassApp.root\" containing the MVA output histograms" << std::endl;
+   delete reader;
+   std::cout << "==> TMVAMulticlassApp is done!" << std::endl << std::endl;
+   
+   TCanvas *canvas1;
+   canvas1= new TCanvas("","",1600,900);
+   TFile *f1 = new TFile("TMVAMulticlassApp.root");  
+   TH1F* histo = (TH1F*)f1->Get("MVA_BDTG_ggH");
+   histo->Draw();
+   canvas1->SaveAs("BDT_Application.pdf");
+}
+
+
+
 
 
