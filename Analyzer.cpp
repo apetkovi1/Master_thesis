@@ -685,7 +685,7 @@ void Analyzer :: Categorize_Display()
 void Analyzer :: TMVAMultiClass()
 {
 	// This loads the library
-  /* TMVA::Tools::Instance();
+   TMVA::Tools::Instance();
  
     
     
@@ -785,8 +785,8 @@ void Analyzer :: TMVAMultiClass()
    std::cout << "==> Wrote root file: " << outputFile->GetName() << std::endl;
    std::cout << "==> TMVAMulticlass is done!" << std::endl;
    
-   */
-   TCanvas *canvas1;
+   
+   /*TCanvas *canvas1;
    canvas1= new TCanvas("","",1600,900);
    TFile *f1 = new TFile("TMVAMulticlass.root"); //treba bit malo c
    TH1F* a = (TH1F*)f1->Get("dataset/Method_BDT/BDTG/MVA_BDTG_Test_ggH_prob_for_ggH");
@@ -830,9 +830,9 @@ void Analyzer :: TMVAMultiClass()
    h->Draw("BAR");
    canvas1->cd(9);
    i->Draw("BAR");
-   canvas1->SaveAs("BDT_distributions.pdf"); 
-   //delete factory;
-   //delete dataloader;
+   canvas1->SaveAs("BDT_distributions.pdf"); */
+   delete factory;
+   delete dataloader;
    
    //TTreeReader reader("dataset/TrainTree",  TFile::Open("TMVAMulticlass.root"));
    //TTreeReaderValue<Float_t> reader_bdtg(reader, "BDTG");
