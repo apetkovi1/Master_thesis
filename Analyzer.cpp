@@ -419,7 +419,6 @@ void Analyzer :: Plot_Histogram()
 
 void Analyzer :: Categorize(TString s1)
 {
-	
 	TFile *f;  
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.  
@@ -685,7 +684,7 @@ void Analyzer :: Categorize_Display()
 void Analyzer :: TMVAMultiClass()
 {
 	// This loads the library
-   TMVA::Tools::Instance();
+    TMVA::Tools::Instance();
  
     
     
@@ -757,9 +756,9 @@ void Analyzer :: TMVAMultiClass()
    dataloader->AddTree(Tree_ttH,"ttH");
    //dataloader->AddTree(Tree_qqZZ,"qqZZ");
    
-   dataloader->SetWeightExpression ("137000/28744188*xsec*overallEventWeight","ggH");
-   dataloader->SetWeightExpression ("137000/1819984.75*xsec*overallEventWeight","VBFH");
-   dataloader->SetWeightExpression ("137000/257544.9375*xsec*overallEventWeight","ttH");
+   dataloader->SetWeightExpression ("137000*xsec*overallEventWeight/28744188","ggH");
+   dataloader->SetWeightExpression ("137000*xsec*overallEventWeight/1819984.75","VBFH");
+   dataloader->SetWeightExpression ("137000*xsec*overallEventWeight/257544.9375","ttH");
    //dataloader->SetWeightExpression ("137000/8398762*xsec*overallEventWeight","qqZZ");
    
     TCut cut="ZZMass>118 && ZZMass<130";
@@ -786,9 +785,9 @@ void Analyzer :: TMVAMultiClass()
    std::cout << "==> TMVAMulticlass is done!" << std::endl;
    
    
-   /*TCanvas *canvas1;
+  /* TCanvas *canvas1;
    canvas1= new TCanvas("","",1600,900);
-   TFile *f1 = new TFile("TMVAMulticlass.root"); //treba bit malo c
+   TFile *f1 = new TFile("TMVAMulticlass.root");  
    TH1F* a = (TH1F*)f1->Get("dataset/Method_BDT/BDTG/MVA_BDTG_Test_ggH_prob_for_ggH");
    TH1F* b = (TH1F*)f1->Get("dataset/Method_BDT/BDTG/MVA_BDTG_Test_VBFH_prob_for_ggH");
    TH1F* c = (TH1F*)f1->Get("dataset/Method_BDT/BDTG/MVA_BDTG_Test_ttH_prob_for_ggH");
@@ -852,7 +851,7 @@ void Analyzer :: TMVAMultiClassApplication()
    // - the variable names must corresponds in name and type to
    // those given in the weight file(s) that you use
    Float_t  D_VBF2j, D_VBF1j, ZZMass,p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal, p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal,nCleanedJetsPt30BTagged, nExtraLep, nCleanedJetsPt30,
-   p_JQCD_SIG_ghg2_1_JHUGen_JECNominal,p_JVBF_SIG_ghv1_1_JHUGen_JECNominal,pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal,ZZPt;
+   p_JQCD_SIG_ghg2_1_JHUGen_JECNominal,p_JVBF_SIG_ghv1_1_JHUGen_JECNominal,pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal,ZZPt,xsec, overallEventWeight;
    
    Short_t a,b,c;
    
@@ -879,10 +878,10 @@ void Analyzer :: TMVAMultiClassApplication()
    }
    // book output histograms 
    UInt_t nbin = 100;
-   TH1F  *histBDTG_ggH(0);
-   histBDTG_ggH  = new TH1F( "MVA_BDTG_ggH",   "MVA_BDTG_ggH",   nbin, 0., 1.1 );
+   TH1F  *histBDTG_ttH(0);
+   histBDTG_ttH  = new TH1F( "MVA_BDTG_ttH",   "MVA_BDTG_ttH",   nbin, 0., 1.1 );
    TFile *input(0);
-   TString fname = "/home/public/data/2018_MC/ggH125/ZZ4lAnalysis.root";
+   TString fname = "/home/public/data/2018_MC/ttH125/ZZ4lAnalysis.root";
    if (!gSystem->AccessPathName( fname )) {
       input = TFile::Open( fname ); // check if file in local directory exists
    }
@@ -896,7 +895,7 @@ void Analyzer :: TMVAMultiClassApplication()
    // - you can use the same variables as above which is slightly faster,
    //   but of course you can use different ones and copy the values inside the event loop   
    TTree* theTree = (TTree*)input->Get("ZZTree/candTree");
-   std::cout << "--- Select ggH sample" << std::endl;
+   std::cout << "--- Select ttH sample" << std::endl;
    theTree->SetBranchAddress( "p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal", &p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal );
    theTree->SetBranchAddress( "p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal", &p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal );
    theTree->SetBranchAddress( "p_JQCD_SIG_ghg2_1_JHUGen_JECNominal", &p_JQCD_SIG_ghg2_1_JHUGen_JECNominal );
@@ -906,6 +905,8 @@ void Analyzer :: TMVAMultiClassApplication()
    theTree->SetBranchAddress( "nCleanedJetsPt30BTagged", &a );
    theTree->SetBranchAddress( "nExtraLep", &b );
    theTree->SetBranchAddress( "nCleanedJetsPt30", &c );
+   theTree->SetBranchAddress( "xsec", &xsec );
+   theTree->SetBranchAddress( "overallEventWeight", &overallEventWeight );
    std::cout << "--- Processing: " << theTree->GetEntries() << " events" << std::endl;
    TStopwatch sw;
    sw.Start();
@@ -919,16 +920,16 @@ void Analyzer :: TMVAMultiClassApplication()
       	nCleanedJetsPt30BTagged=a;	
 		nExtraLep=b;
 		nCleanedJetsPt30=c;
-        histBDTG_ggH->Fill((reader->EvaluateMulticlass( "BDTG method" ))[0]);				
+		double w=137000*xsec*overallEventWeight/257544.9375;
+		if(ZZMass>118 && ZZMass<130)
+        histBDTG_ttH->Fill((reader->EvaluateMulticlass( "BDTG method" ))[0],w);     		
    }
-    
-   
    // get elapsed time
    sw.Stop();
    std::cout << "--- End of event loop: "; sw.Print();
    TFile *target  = new TFile( "TMVAMulticlassApp.root","RECREATE" );
     
-   histBDTG_ggH->Write();
+   histBDTG_ttH->Write();
     
    target->Close();
    std::cout << "--- Created root file: \"TMVMulticlassApp.root\" containing the MVA output histograms" << std::endl;
@@ -938,9 +939,13 @@ void Analyzer :: TMVAMultiClassApplication()
    TCanvas *canvas1;
    canvas1= new TCanvas("","",1600,900);
    TFile *f1 = new TFile("TMVAMulticlassApp.root");  
-   TH1F* histo = (TH1F*)f1->Get("MVA_BDTG_ggH");
-   histo->Draw();
-   canvas1->SaveAs("BDT_Application.pdf");
+   TH1F* histo = (TH1F*)f1->Get("MVA_BDTG_ttH");
+   histo->SetFillColor(kBlue);
+   histo->GetYaxis()->SetRangeUser(0,1.1);
+   histo->Draw("BAR");
+   canvas1->SaveAs("BDT_Application_ttH.pdf");
+   double x=histo->Integral();
+   cout<<x<<endl;
 }
 
 
