@@ -18,11 +18,15 @@
 #include<TMath.h>
 #include<TLatex.h>
 #include "TTree.h"
+#include "TStopwatch.h"
 
 // Headers for TMVA
 #include "TMVA/Factory.h"
 #include "TMVA/DataLoader.h"
 #include "TMVA/Tools.h"
+#include "TMVA/Reader.h"
+#include "TTreeReader.h"
+#include "TTreeReaderValue.h"
 //#include "TMVA/TMVAMultiClassGui.h"
 
 // Header file for the classes stored in the TTree if any.
@@ -1452,6 +1456,9 @@ public :
    virtual void Categorize(TString s1);
    virtual void Categorize_Display();
    virtual void TMVAMultiClass();
+   virtual void TMVAMultiClassApplication();
+   virtual void TMVATraining();
+   virtual void TMVAClassificationApplication();
    public:
    	TTree *tree;
    	TH1F* h1; //dodano
@@ -1462,15 +1469,15 @@ public :
 	TH1* Histo_PFMET_ttH125 = new TH1F("PFMET_ttH125", "PFMET_ttH125", 50, 0, 250);
 	TH1* Histo_PFMET_ZZTo4lext1 = new TH1F("PFMET_ZZTo4lext1", "PFMET_ZZTo4lext1", 50, 0, 250);
 	//nCleanedJetsPt30
-	TH1* Histo_nCleanedJetsPt30_ggH125 = new TH1F("nCleanedJetsPt30", "nCleanedJetsPt30", 11, 0, 11);  
-   	TH1* Histo_nCleanedJetsPt30_VBFH125 = new TH1F("nCleanedJetsPt30", "nCleanedJetsPt30", 11, 0, 11);
-	TH1* Histo_nCleanedJetsPt30_ttH125 = new TH1F("nCleanedJetsPt30", "nCleanedJetsPt30", 11, 0, 11);
-	TH1* Histo_nCleanedJetsPt30_ZZTo4lext1 = new TH1F("nCleanedJetsPt30", "nCleanedJetsPt30", 11, 0, 11);
+	TH1* Histo_nCleanedJetsPt30_ggH125 = new TH1F("nCleanedJetsPt30_ggH125", "nCleanedJetsPt30_ggH125", 11, 0, 11);  
+   	TH1* Histo_nCleanedJetsPt30_VBFH125 = new TH1F("nCleanedJetsPt30_VBFH125", "nCleanedJetsPt30_VBFH125", 11, 0, 11);
+	TH1* Histo_nCleanedJetsPt30_ttH125 = new TH1F("nCleanedJetsPt30_ttH125", "nCleanedJetsPt30_ttH125", 11, 0, 11);
+	TH1* Histo_nCleanedJetsPt30_ZZTo4lext1 = new TH1F("nCleanedJetsPt30_ZZTo4lext1", "nCleanedJetsPt30_ZZTo4lext1", 11, 0, 11);
 	//nCleanedJetsPt30BTagged
-	TH1* Histo_nCleanedJetsPt30BTagged_ggH125 = new TH1F("nCleanedJetsPt30BTagged", "nCleanedJetsPt30BTagged", 5, 0, 5);  
-   	TH1* Histo_nCleanedJetsPt30BTagged_VBFH125 = new TH1F("nCleanedJetsPt30BTagged", "nCleanedJetsPt30BTagged", 5, 0, 5);
-	TH1* Histo_nCleanedJetsPt30BTagged_ttH125 = new TH1F("nCleanedJetsPt30BTagged", "nCleanedJetsPt30BTagged", 5, 0, 5);
-	TH1* Histo_nCleanedJetsPt30BTagged_ZZTo4lext1 = new TH1F("nCleanedJetsPt30BTagged", "nCleanedJetsPt30BTagged", 5, 0, 5);
+	TH1* Histo_nCleanedJetsPt30BTagged_ggH125 = new TH1F("nCleanedJetsPt30BTagged_ggH125", "nCleanedJetsPt30BTagged_ggH125", 5, 0, 5);  
+   	TH1* Histo_nCleanedJetsPt30BTagged_VBFH125 = new TH1F("nCleanedJetsPt30BTagged_VBFH125", "nCleanedJetsPt30BTagged_VBFH125", 5, 0, 5);
+	TH1* Histo_nCleanedJetsPt30BTagged_ttH125 = new TH1F("nCleanedJetsPt30BTagged_ttH", "nCleanedJetsPt30BTagged_ttH", 5, 0, 5);
+	TH1* Histo_nCleanedJetsPt30BTagged_ZZTo4lext1 = new TH1F("nCleanedJetsPt30BTagged_ZZTo4lext1", "nCleanedJetsPt30BTagged_ZZTo4lext1", 5, 0, 5);
 	//ZZPt
 	TH1* Histo_ZZPt_ggH125 = new TH1F("ZZPt_ggH125", "ZZPt_ggH125", 50, 0, 250);  
    	TH1* Histo_ZZPt_VBFH125 = new TH1F("ZZPt_VBFH125", "ZZPt_VBFH125", 50, 0, 250);
@@ -1513,7 +1520,7 @@ public :
 	TH1F *Histo_ggH125=new TH1F("gH125","ggH125",7,0,7);
 	TH1F *Histo_VBFH125=new TH1F("VBFH125","VBFH125",7,0,7);
 	TH1F *Histo_ttH125=new TH1F("ttH125","ttH125",7,0,7);
-	TH1F *Histo_ZZTo4lext1=new TH1F("ZZTo4lext1","ZZTo4lext1",7,0,7);
+	TH1F *Histo_VH125=new TH1F("ZZTo4lext1","ZZTo4lext1",7,0,7);
 };
 
 #endif
