@@ -1457,8 +1457,8 @@ public :
    virtual void Categorize_Display();
    virtual void TMVAMultiClass();
    virtual void TMVAMultiClassApplication();
-   virtual void TMVATraining();
-   virtual void TMVAClassificationApplication();
+   virtual void HiggsProduction_Training();
+   virtual void HiggsProduction_Application();
    public:
    	TTree *tree;
    	TH1F* h1; //dodano
@@ -1520,7 +1520,7 @@ public :
 	TH1F *Histo_ggH125=new TH1F("gH125","ggH125",7,0,7);
 	TH1F *Histo_VBFH125=new TH1F("VBFH125","VBFH125",7,0,7);
 	TH1F *Histo_ttH125=new TH1F("ttH125","ttH125",7,0,7);
-	TH1F *Histo_VH125=new TH1F("ZZTo4lext1","ZZTo4lext1",7,0,7);
+	TH1F *Histo_VH125=new TH1F("VH125","VH125",7,0,7);
 };
 
 #endif
