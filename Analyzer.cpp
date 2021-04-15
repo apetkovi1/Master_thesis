@@ -420,8 +420,7 @@ void Analyzer :: Plot_Histogram()
 void Analyzer :: Categorize(TString s1)
 {
 	TFile *f;  
-// if parameter tree is not specified (or zero), connect the file
-// used to generate this class and read the Tree.  
+ 
       f = new TFile(s1);
       TDirectory * dir = (TDirectory*)f->Get(s1+":/ZZTree");
       dir->GetObject("candTree",tree);
@@ -871,7 +870,7 @@ void Analyzer :: TMVAMultiClassApplication()
    TFile *input(0);
    TString fname = "/home/public/data/2018_MC/ttH125/ZZ4lAnalysis.root";
    if (!gSystem->AccessPathName( fname )) {
-      input = TFile::Open( fname ); // check if file in local directory exists
+      input = TFile::Open( fname );  
    }
    if (!input) {
       std::cout << "ERROR: could not open data file, please generate example data first!" << std::endl;
