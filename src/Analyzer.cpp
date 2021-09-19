@@ -77,8 +77,7 @@ void Analyzer::Loop()
 void Analyzer::Fill_Histogram(TString s)
 {
   TFile *f;  
-// if parameter tree is not specified (or zero), connect the file
-// used to generate this class and read the Tree.  
+   
       f = new TFile(s);
       TDirectory * dir = (TDirectory*)f->Get(s+":/ZZTree");
       dir->GetObject("candTree",tree);
@@ -445,8 +444,7 @@ void Analyzer :: Categorize(TString s1)
       float D_ZHh = 1./(1.+ c_MelaZH*(p_HadZH_mavjj_true_JECNominal*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal)/(p_HadZH_mavjj_JECNominal*p_HadZH_SIG_ghz1_1_JHUGen_JECNominal));      	  
 	  if(s1.Contains("ggH125"))
 	  {
-	if(ZZMass>118 && ZZMass<130)
-	{	
+	 
 	if( nExtraLep==0 && (((nCleanedJetsPt30==2||nCleanedJetsPt30==3)&&nCleanedJetsPt30BTagged_bTagSF<=1)||(nCleanedJetsPt30>=4&&nCleanedJetsPt30BTagged_bTagSF==0)) && D_VBF2j>0.5 )
     Histo_ggH125->Fill(4.5,w);
 
@@ -467,13 +465,12 @@ void Analyzer :: Categorize(TString s1)
  
     else
     Histo_ggH125->Fill(6.5,w);
-	}
+	 
     }
 	
 	  if(s1.Contains("VBFH125"))
 	  {
-		  if(ZZMass>118 && ZZMass<130)
-		  {
+		   
 	if( nExtraLep==0 && (((nCleanedJetsPt30==2||nCleanedJetsPt30==3)&&nCleanedJetsPt30BTagged_bTagSF<=1)||(nCleanedJetsPt30>=4&&nCleanedJetsPt30BTagged_bTagSF==0)) && D_VBF2j>0.5 )
     Histo_VBFH125->Fill(4.5,w);
 
@@ -494,13 +491,12 @@ void Analyzer :: Categorize(TString s1)
  
     else
     Histo_VBFH125->Fill(6.5,w); 
-		  }
+		   
 
 	  }
 	  if(s1.Contains("ttH125"))
 	  {
-	if(ZZMass>118 && ZZMass<130)
-	{		
+	 
 	if( nExtraLep==0 && (((nCleanedJetsPt30==2||nCleanedJetsPt30==3)&&nCleanedJetsPt30BTagged_bTagSF<=1)||(nCleanedJetsPt30>=4&&nCleanedJetsPt30BTagged_bTagSF==0)) && D_VBF2j>0.5 )
     Histo_ttH125->Fill(4.5,w);
 
@@ -521,14 +517,13 @@ void Analyzer :: Categorize(TString s1)
  
     else
     Histo_ttH125->Fill(6.5,w); 
-	}
+	 
 	  }
 	  
 	  if(s1.Contains("WminusH125")||s1.Contains("WplusH125")||s1.Contains("ZH125"))
 	  {
 
-    if(ZZMass>118 && ZZMass<130)
-	{	
+    
 	if( nExtraLep==0 && (((nCleanedJetsPt30==2||nCleanedJetsPt30==3)&&nCleanedJetsPt30BTagged_bTagSF<=1)||(nCleanedJetsPt30>=4&&nCleanedJetsPt30BTagged_bTagSF==0)) && D_VBF2j>0.5 )
     Histo_VH125->Fill(4.5,w);
 
@@ -549,7 +544,7 @@ void Analyzer :: Categorize(TString s1)
  
     else
     Histo_VH125->Fill(6.5,w);
-	}
+	 
 	  }
   }
 }
@@ -619,7 +614,7 @@ void Analyzer :: Categorize_Display()
 	Histo_VH125->GetYaxis()->SetRangeUser(0., 5.);
 	Histo_VH125->Draw("hbar");
 	
-	canvas_categories_1->SaveAs("Categorization.pdf");
+	//canvas_categories_1->SaveAs("Categorization.png");
 	
 	double VBF2j_exp_events=Histo_ggH125->Integral(5,5)+Histo_VBFH125->Integral(5,5)+Histo_ttH125->Integral(5,5)+Histo_VH125->Integral(5,5);
 	double VHh_exp_events=Histo_ggH125->Integral(4,4)+Histo_VBFH125->Integral(4,4)+Histo_ttH125->Integral(4,4)+Histo_VH125->Integral(4,4);
@@ -632,13 +627,35 @@ void Analyzer :: Categorize_Display()
 	
 	double exp_events[7]={ttHl_exp_events,ttHh_exp_events,VHl_exp_events,VHh_exp_events,VBF2j_exp_events,VBF1j_exp_events,Untagged_exp_events};
 	
+   cout<<"ttH:"<<endl;
+   cout<<(Histo_ggH125->Integral(1,1)+Histo_ggH125->Integral(2,2))/(exp_events[0]+exp_events[1])<<endl;
+   cout<<(Histo_VBFH125->Integral(1,1)+Histo_VBFH125->Integral(2,2))/(exp_events[0]+exp_events[1])<<endl;
+   cout<<(Histo_ttH125->Integral(1,1)+Histo_ttH125->Integral(2,2))/(exp_events[0]+exp_events[1])<<" "<<Histo_ttH125->Integral(1,1)+Histo_ttH125->Integral(2,2)<<endl;
+   cout<<(Histo_VH125->Integral(1,1)+Histo_VH125->Integral(2,2))/(exp_events[0]+exp_events[1])<<endl;
+   cout<<"VH:"<<endl;
+   cout<<(Histo_ggH125->Integral(3,3)+Histo_ggH125->Integral(4,4))/(exp_events[2]+exp_events[3])<<endl;
+   cout<<(Histo_VBFH125->Integral(3,3)+Histo_VBFH125->Integral(4,4))/(exp_events[2]+exp_events[3])<<endl;
+   cout<<(Histo_ttH125->Integral(3,3)+Histo_ttH125->Integral(4,4))/(exp_events[2]+exp_events[3])<<endl;
+   cout<<(Histo_VH125->Integral(3,3)+Histo_VH125->Integral(4,4))/(exp_events[2]+exp_events[3])<<" "<<Histo_VH125->Integral(3,3)+Histo_VH125->Integral(4,4)<<endl;
+   cout<<"VBFH:"<<endl;
+   cout<<(Histo_ggH125->Integral(5,5)+Histo_ggH125->Integral(6,6))/(exp_events[4]+exp_events[5])<<endl;
+   cout<<(Histo_VBFH125->Integral(5,5)+Histo_VBFH125->Integral(6,6))/(exp_events[4]+exp_events[5])<<" "<<Histo_VBFH125->Integral(5,5)+Histo_VBFH125->Integral(6,6)<<endl;
+   cout<<(Histo_ttH125->Integral(5,5)+Histo_ttH125->Integral(6,6))/(exp_events[4]+exp_events[5])<<endl;
+   cout<<(Histo_VH125->Integral(5,5)+Histo_VH125->Integral(6,6))/(exp_events[4]+exp_events[5])<<endl;
+   cout<<"Untagged:"<<endl;
+   cout<<(Histo_ggH125->Integral(7,7) )/(exp_events[6] )<<" "<<Histo_ggH125->Integral(7,7)<<endl;
+   cout<<(Histo_VBFH125->Integral(7,7) )/(exp_events[6] )<<endl;
+   cout<<(Histo_ttH125->Integral(7,7) )/(exp_events[6] )<<endl;
+   cout<<(Histo_VH125->Integral(7,7) )/(exp_events[6] )<<endl;
+
+   cout<<endl<<ttHl_exp_events+ttHh_exp_events<<" "<<VHl_exp_events+VHh_exp_events<<" "<<VBF1j_exp_events+VBF2j_exp_events<<" "<<Untagged_exp_events<<endl;
 	
-	for(i=1;i<=7;i++)
+   for(i=1;i<=7;i++)
 	{
 	  Histo_ggH125->SetBinContent(i,Histo_ggH125->Integral(i,i)/exp_events[i-1]);	
-	  Histo_VBFH125->SetBinContent(i,Histo_VBFH125->Integral(i,i)/exp_events[i-1]);
-	  Histo_ttH125->SetBinContent(i,Histo_ttH125->Integral(i,i)/exp_events[i-1]);
-	  Histo_VH125->SetBinContent(i,Histo_VH125->Integral(i,i)/exp_events[i-1]);
+     Histo_VBFH125->SetBinContent(i,Histo_VBFH125->Integral(i,i)/exp_events[i-1]); 
+     Histo_ttH125->SetBinContent(i,Histo_ttH125->Integral(i,i)/exp_events[i-1]);
+     Histo_VH125->SetBinContent(i,Histo_VH125->Integral(i,i)/exp_events[i-1]);
 	}
 	THStack *stack = new THStack("stack","Categorization (simulation) ; ;fraction");
 	TCanvas *master_canvas=new TCanvas("master","master",1400,800);
@@ -676,7 +693,7 @@ void Analyzer :: Categorize_Display()
 	t5->Draw();
 	t6->Draw();
 	t7->Draw();
-	master_canvas->SaveAs("Categorization_stack.pdf");
+	//master_canvas->SaveAs("Categorization_stack.pdf");
    //stack
 }
  
@@ -725,7 +742,7 @@ void Analyzer :: TMVAMultiClass()
    TFile *input2(0);
    TString fname2 = "/home/public/data/2018_MC/VBFH125/ZZ4lAnalysis.root";
    if (!gSystem->AccessPathName( fname2 )) {
-      input2 = TFile::Open( fname2 ); // check if file in local directory exists
+      input2 = TFile::Open( fname2 );  
    }
    
    TFile *input3(0);
@@ -932,7 +949,7 @@ void Analyzer :: TMVAMultiClassApplication()
    cout<<x<<endl;*/
 }
 
-void Analyzer::HiggsProduction_Training()
+void Analyzer :: HiggsProduction_Training()
 {
    
    TMVA::Tools::Instance();
@@ -942,30 +959,34 @@ void Analyzer::HiggsProduction_Training()
    TFile* outputFile = TFile::Open( outfileName, "RECREATE" );
    TMVA::Factory *factory = new TMVA::Factory( "TMVAClassification", outputFile,
                                                "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P;G,D:AnalysisType=Classification" );
-   TMVA::DataLoader *dataloader=new TMVA::DataLoader("dataset_3");
+   TMVA::DataLoader *dataloader=new TMVA::DataLoader("dataset_7");
    
    dataloader->AddVariable( "D_VBF2j:=1./(1.+ p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal/p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal)", 'F' );
    dataloader->AddVariable("D_VBF1j := 1./(1.+p_JQCD_SIG_ghg2_1_JHUGen_JECNominal/(p_JVBF_SIG_ghv1_1_JHUGen_JECNominal*pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal))",'F');
    dataloader->AddVariable("D_WHh := 1./(1.+ (p_HadWH_mavjj_true_JECNominal*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal)/(p_HadWH_mavjj_JECNominal*p_HadWH_SIG_ghw1_1_JHUGen_JECNominal))",'F');
    dataloader->AddVariable("D_ZHh := 1./(1.+ (p_HadZH_mavjj_true_JECNominal*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal)/(p_HadZH_mavjj_JECNominal*p_HadZH_SIG_ghz1_1_JHUGen_JECNominal))",'F');
    
-   //dataloader->AddVariable( "p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal", 'F' );
-   //dataloader->AddVariable( "p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal", 'F' );
-   //dataloader->AddVariable( "p_JQCD_SIG_ghg2_1_JHUGen_JECNominal", 'F' );
-   //dataloader->AddVariable( "p_JVBF_SIG_ghv1_1_JHUGen_JECNominal", 'F' );
-   //dataloader->AddVariable( "pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal", 'F' );
-   //dataloader->AddVariable( "p_HadWH_mavjj_true_JECNominal", 'F' );
-   //dataloader->AddVariable( "p_HadWH_mavjj_JECNominal", 'F' );
-   //dataloader->AddVariable( "p_HadWH_SIG_ghw1_1_JHUGen_JECNominal", 'F' );
-   //dataloader->AddVariable( "p_HadZH_mavjj_true_JECNominal", 'F' );
-   //dataloader->AddVariable( "p_HadZH_mavjj_JECNominal", 'F' );
-   //dataloader->AddVariable( "p_HadZH_SIG_ghz1_1_JHUGen_JECNominal", 'F' );
     
-   //dataloader->AddVariable("ZZMass",'F');
+   dataloader->AddVariable( "p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal", 'F' );
+   dataloader->AddVariable( "p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal", 'F' );
+   dataloader->AddVariable( "p_JQCD_SIG_ghg2_1_JHUGen_JECNominal", 'F' );
+   dataloader->AddVariable( "p_JVBF_SIG_ghv1_1_JHUGen_JECNominal", 'F' );
+   dataloader->AddVariable( "pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal", 'F' );
+   dataloader->AddVariable( "p_HadWH_mavjj_true_JECNominal", 'F' );
+   dataloader->AddVariable( "p_HadWH_SIG_ghw1_1_JHUGen_JECNominal", 'F' );
+
+   dataloader->AddVariable( "PFMET", 'F' );
+   dataloader->AddVariable( "ZZPt", 'F' );
+   dataloader->AddVariable( "DiJetMass", 'F' );
+   dataloader->AddVariable( "DiJetDEta", 'F' );
+   dataloader->AddVariable( "ZZEta", 'F' );
+   dataloader->AddVariable( "ZZPhi", 'F' );
+   dataloader->AddVariable( "ZZjjPt", 'F' );
+   dataloader->AddVariable( "DiJetFisher", 'F' );
+    
    dataloader->AddVariable( "nCleanedJetsPt30BTagged", 'F' );
    dataloader->AddVariable( "nExtraLep", 'F' );
    dataloader->AddVariable( "nCleanedJetsPt30", 'F' );
-   
    
    TFile *input1 = new TFile("ZZ4lAnalysis_ggH.root","update");
    TFile *input2 = new TFile("ZZ4lAnalysis_VBFH.root","update");
@@ -974,18 +995,19 @@ void Analyzer::HiggsProduction_Training()
    TFile *input5 = new TFile("ZZ4lAnalysis_WplusH.root","update");
    TFile *input6 = new TFile("ZZ4lAnalysis_ZH.root","update");
    
+   
    TTree *Tree_ggH  = (TTree*)input1->Get("ZZTree/candTree");
    TTree *Tree_VBFH = (TTree*)input2->Get("ZZTree/candTree");
    TTree *Tree_ttH = (TTree*)input3->Get("ZZTree/candTree");
    TTree *Tree_WminusH = (TTree*)input4->Get("ZZTree/candTree");
    TTree *Tree_WplusH = (TTree*)input5->Get("ZZTree/candTree");
    TTree *Tree_ZH = (TTree*)input6->Get("ZZTree/candTree");
-   
+  
    Float_t overallEventWeight,xsec,weight;
    TBranch *b1_weight = Tree_ggH->Branch("weight",&weight,"weight/F");
    Tree_ggH->SetBranchAddress("xsec",&xsec); 
    Tree_ggH->SetBranchAddress("overallEventWeight",&overallEventWeight);
-
+  
    Long64_t nentries = Tree_ggH->GetEntries(); for (Long64_t i=0;i<nentries;i++) 
    { 
        Tree_ggH->GetEntry(i); 
@@ -1051,15 +1073,15 @@ void Analyzer::HiggsProduction_Training()
    dataloader->SetSignalWeightExpression("weight");   
    dataloader->SetBackgroundWeightExpression("weight");
    
-   //dataloader->AddSignalTree    (Tree_ttH);
+   dataloader->AddSignalTree(Tree_ttH);
    dataloader->AddBackgroundTree( Tree_ggH );
-   dataloader->AddSignalTree( Tree_VBFH );
-   //dataloader->AddSignalTree( Tree_WminusH );
-   //dataloader->AddSignalTree( Tree_WplusH );
-   //dataloader->AddSignalTree( Tree_ZH );
-    
-   TCut mycuts = "ZZMass>118 && ZZMass<130 && pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal!=0";  
-   TCut mycutb = "ZZMass>118 && ZZMass<130 && pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal!=0";  
+   dataloader->AddBackgroundTree( Tree_VBFH );
+   dataloader->AddBackgroundTree( Tree_WminusH );
+   dataloader->AddBackgroundTree( Tree_WplusH );
+   dataloader->AddBackgroundTree( Tree_ZH );
+   
+   TCut mycuts = "ZZMass>=105 && ZZMass<=140 && pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal!=0";  
+   TCut mycutb = "ZZMass>=105 && ZZMass<=140 && pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal!=0";  
    //dataloader->PrepareTrainingAndTestTree( mycuts, mycutb, "nTrain_Signal=1000:nTrain_Background=1000:SplitMode=Random:NormMode=NumEvents:!V" );
    dataloader->PrepareTrainingAndTestTree( mycuts, mycutb, "SplitMode=Random:NormMode=None:!V" );
 
@@ -1078,13 +1100,14 @@ void Analyzer::HiggsProduction_Training()
    
    delete factory;
    delete dataloader;
-  
+   
    //TFile *f = new TFile("TMVA.root"); 
    //TH1F* signal = (TH1F*)f->Get("dataset/Method_BDT/BDT/MVA_BDT_Train_S");
    //TH1F* bkg = (TH1F*)f->Get("dataset/Method_BDT/BDT/MVA_BDT_Train_B");
-   gStyle->SetOptStat(0);
-   TH1F* signal = new TH1F("signal", "signal", 160, -0.8, 0.8);
-   TH1F* bkg = new TH1F("bkg", "bkg", 160, -0.8, 0.8);
+   
+   /*gStyle->SetOptStat(0);
+   TH1F* signal = new TH1F("signal", " ", 160, -0.3, 0.4);
+   TH1F* bkg = new TH1F("bkg", "bkg", 160, -0.3, 0.4);
    signal->SetLineColor(kBlue);
    bkg->SetLineColor(kRed);
    Float_t x,y; 
@@ -1100,17 +1123,22 @@ void Analyzer::HiggsProduction_Training()
        else
          bkg->Fill(*reader_bdt.Get(),*reader_weight.Get());		   
    } 
-    x=signal->Integral(signal->FindBin(0.12),160);
-	y=bkg->Integral(bkg->FindBin(0.12),160);
-	cout<<x<<" "<<y<<" "<<endl;
+   signal->Scale(1./signal->Integral());
+   bkg->Scale(1./bkg->Integral());
 	TCanvas *canvas= new TCanvas("","",1600,900);
-   signal->Draw("hist");
-   bkg->Draw("hist same");
-   canvas->SaveAs("canvas.pdf");
+   auto legend = new TLegend(0.82,0.82,0.9,0.9);
+   legend->AddEntry(signal,"VBFH","f");
+   legend->AddEntry(bkg,"ggH","f");
+   bkg->GetXaxis()->SetTitle("bdt_{ggH}^{VBFH}");
+   bkg->GetYaxis()->SetTitle("normalized to 1");
+   bkg->Draw("hist");
+   signal->Draw("hist same");
+   legend->Draw();
+   canvas->SaveAs("VBFH_BDT_modified.pdf");*/
    
 }
 
-void Analyzer :: HiggsProduction_Application()
+void Analyzer :: HiggsProduction_Application(TString s1)
 {
 	TMVA::Tools::Instance();
    std::map<std::string,int> Use;
@@ -1120,46 +1148,96 @@ void Analyzer :: HiggsProduction_Application()
    TMVA::Reader *reader_3 = new TMVA::Reader( "!Color:!Silent" );
    Float_t  D_VBF2j, D_VBF1j,D_WHh,D_ZHh, ZZMass,p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal, p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal,nCleanedJetsPt30BTagged, nExtraLep, nCleanedJetsPt30,
    p_JQCD_SIG_ghg2_1_JHUGen_JECNominal,p_JVBF_SIG_ghv1_1_JHUGen_JECNominal,pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal,p_HadWH_mavjj_true_JECNominal,p_HadWH_mavjj_JECNominal,
-   p_HadWH_SIG_ghw1_1_JHUGen_JECNominal,p_HadZH_mavjj_true_JECNominal,p_HadZH_mavjj_JECNominal,p_HadZH_SIG_ghz1_1_JHUGen_JECNominal,xsec, overallEventWeight;
+   p_HadWH_SIG_ghw1_1_JHUGen_JECNominal,p_HadZH_mavjj_true_JECNominal,p_HadZH_mavjj_JECNominal,p_HadZH_SIG_ghz1_1_JHUGen_JECNominal,xsec, overallEventWeight,
+   PFMET, ZZPt, DiJetMass, DiJetDEta, DiJetFisher, ZZEta, ZZPhi, ZZjjPt;
    Short_t a,b,c;
+   //Float_t ttH_cut=0.12, VH_cut=0.12, VBF_cut=0.04;
+   //Float_t ttH_cut=0.122, VH_cut=0.108, VBF_cut=0.03645;
+   Float_t ttH_cut=0.122, VH_cut=0.08, VBF_cut=0.023;
    // ttH vs ggH+VBF+VH
    reader_1->AddVariable( "D_VBF2j:=1./(1.+ p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal/p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal)", &D_VBF2j );
    reader_1->AddVariable( "D_VBF1j:= 1./(1.+p_JQCD_SIG_ghg2_1_JHUGen_JECNominal/(p_JVBF_SIG_ghv1_1_JHUGen_JECNominal*pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal))", &D_VBF1j );
    reader_1->AddVariable("D_WHh := 1./(1.+ (p_HadWH_mavjj_true_JECNominal*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal)/(p_HadWH_mavjj_JECNominal*p_HadWH_SIG_ghw1_1_JHUGen_JECNominal))", &D_WHh);
    reader_1->AddVariable("D_ZHh := 1./(1.+ (p_HadZH_mavjj_true_JECNominal*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal)/(p_HadZH_mavjj_JECNominal*p_HadZH_SIG_ghz1_1_JHUGen_JECNominal))", &D_ZHh);
+   reader_1->AddVariable( "p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal", &p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal );
+   reader_1->AddVariable( "p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal", &p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal );
+   reader_1->AddVariable( "p_JQCD_SIG_ghg2_1_JHUGen_JECNominal", &p_JQCD_SIG_ghg2_1_JHUGen_JECNominal );
+   reader_1->AddVariable( "p_JVBF_SIG_ghv1_1_JHUGen_JECNominal", &p_JVBF_SIG_ghv1_1_JHUGen_JECNominal );
+   reader_1->AddVariable( "pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal", &pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal );
+   reader_1->AddVariable( "p_HadWH_mavjj_true_JECNominal", &p_HadWH_mavjj_true_JECNominal );
+   reader_1->AddVariable( "p_HadWH_SIG_ghw1_1_JHUGen_JECNominal", &p_HadWH_SIG_ghw1_1_JHUGen_JECNominal );
+   
+   reader_1->AddVariable( "PFMET", &PFMET );
+   reader_1->AddVariable( "ZZPt",  &ZZPt );
+   reader_1->AddVariable( "DiJetMass", &DiJetMass );
+   reader_1->AddVariable( "DiJetDEta", &DiJetDEta );
+   reader_1->AddVariable( "ZZEta", &ZZEta );
+   reader_1->AddVariable( "ZZPhi", &ZZPhi );
+   reader_1->AddVariable( "ZZjjPt", &ZZjjPt );
+   reader_1->AddVariable( "DiJetFisher", &DiJetFisher );
    reader_1->AddVariable( "nCleanedJetsPt30BTagged", &nCleanedJetsPt30BTagged );
    reader_1->AddVariable( "nExtraLep", &nExtraLep );
    reader_1->AddVariable( "nCleanedJetsPt30", &nCleanedJetsPt30);
+   
    // VH vs ggh+VBF
    reader_2->AddVariable( "D_VBF2j:=1./(1.+ p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal/p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal)", &D_VBF2j );
    reader_2->AddVariable( "D_VBF1j:= 1./(1.+p_JQCD_SIG_ghg2_1_JHUGen_JECNominal/(p_JVBF_SIG_ghv1_1_JHUGen_JECNominal*pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal))", &D_VBF1j );
    reader_2->AddVariable("D_WHh := 1./(1.+ (p_HadWH_mavjj_true_JECNominal*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal)/(p_HadWH_mavjj_JECNominal*p_HadWH_SIG_ghw1_1_JHUGen_JECNominal))", &D_WHh);
    reader_2->AddVariable("D_ZHh := 1./(1.+ (p_HadZH_mavjj_true_JECNominal*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal)/(p_HadZH_mavjj_JECNominal*p_HadZH_SIG_ghz1_1_JHUGen_JECNominal))", &D_ZHh);
+   reader_2->AddVariable( "p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal", &p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal );
+   reader_2->AddVariable( "p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal", &p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal );
+   reader_2->AddVariable( "p_JQCD_SIG_ghg2_1_JHUGen_JECNominal", &p_JQCD_SIG_ghg2_1_JHUGen_JECNominal );
+   reader_2->AddVariable( "p_JVBF_SIG_ghv1_1_JHUGen_JECNominal", &p_JVBF_SIG_ghv1_1_JHUGen_JECNominal );
+   reader_2->AddVariable( "pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal", &pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal );
+   reader_2->AddVariable( "p_HadWH_mavjj_true_JECNominal", &p_HadWH_mavjj_true_JECNominal );
+   reader_2->AddVariable( "p_HadWH_SIG_ghw1_1_JHUGen_JECNominal", &p_HadWH_SIG_ghw1_1_JHUGen_JECNominal );
+   
+   reader_2->AddVariable( "PFMET", &PFMET );
+   reader_2->AddVariable( "ZZPt", &ZZPt );
+   reader_2->AddVariable( "DiJetMass", &DiJetMass );
+   reader_2->AddVariable( "DiJetDEta", &DiJetDEta );
+   reader_2->AddVariable( "ZZEta", &ZZEta );
+   reader_2->AddVariable( "ZZPhi", &ZZPhi );
+   reader_2->AddVariable( "ZZjjPt", &ZZjjPt );
+   reader_2->AddVariable( "DiJetFisher", &DiJetFisher );
    reader_2->AddVariable( "nCleanedJetsPt30BTagged", &nCleanedJetsPt30BTagged );
    reader_2->AddVariable( "nExtraLep", &nExtraLep );
    reader_2->AddVariable( "nCleanedJetsPt30", &nCleanedJetsPt30);
+   
    // ggH vs VBF
    reader_3->AddVariable( "D_VBF2j:=1./(1.+ p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal/p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal)", &D_VBF2j );
    reader_3->AddVariable( "D_VBF1j:= 1./(1.+p_JQCD_SIG_ghg2_1_JHUGen_JECNominal/(p_JVBF_SIG_ghv1_1_JHUGen_JECNominal*pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal))", &D_VBF1j );
    reader_3->AddVariable("D_WHh := 1./(1.+ (p_HadWH_mavjj_true_JECNominal*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal)/(p_HadWH_mavjj_JECNominal*p_HadWH_SIG_ghw1_1_JHUGen_JECNominal))", &D_WHh);
    reader_3->AddVariable("D_ZHh := 1./(1.+ (p_HadZH_mavjj_true_JECNominal*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal)/(p_HadZH_mavjj_JECNominal*p_HadZH_SIG_ghz1_1_JHUGen_JECNominal))", &D_ZHh);
+   reader_3->AddVariable( "p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal", &p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal );
+   reader_3->AddVariable( "p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal", &p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal );
+   reader_3->AddVariable( "p_JQCD_SIG_ghg2_1_JHUGen_JECNominal", &p_JQCD_SIG_ghg2_1_JHUGen_JECNominal );
+   reader_3->AddVariable( "p_JVBF_SIG_ghv1_1_JHUGen_JECNominal", &p_JVBF_SIG_ghv1_1_JHUGen_JECNominal );
+   reader_3->AddVariable( "pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal", &pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal );
+   reader_3->AddVariable( "p_HadWH_mavjj_true_JECNominal", &p_HadWH_mavjj_true_JECNominal );
+   reader_3->AddVariable( "p_HadWH_SIG_ghw1_1_JHUGen_JECNominal", &p_HadWH_SIG_ghw1_1_JHUGen_JECNominal );
+   
+   reader_3->AddVariable( "PFMET", &PFMET );
+   reader_3->AddVariable( "ZZPt", &ZZPt );
+   reader_3->AddVariable( "DiJetMass", &DiJetMass );
+   reader_3->AddVariable( "DiJetDEta", &DiJetDEta );
+   reader_3->AddVariable( "ZZEta", &ZZEta );
+   reader_3->AddVariable( "ZZPhi", &ZZPhi );
+   reader_3->AddVariable( "ZZjjPt", &ZZjjPt );
+   reader_3->AddVariable( "DiJetFisher", &DiJetFisher );
    reader_3->AddVariable( "nCleanedJetsPt30BTagged", &nCleanedJetsPt30BTagged );
    reader_3->AddVariable( "nExtraLep", &nExtraLep );
    reader_3->AddVariable( "nCleanedJetsPt30", &nCleanedJetsPt30);
    
+   reader_1->BookMVA("BDT method","dataset_7/weights/TMVAClassification_BDT.weights.xml");
+   reader_2->BookMVA("BDT method","dataset_8/weights/TMVAClassification_BDT.weights.xml");
+   reader_3->BookMVA("BDT method","dataset_9/weights/TMVAClassification_BDT.weights.xml");
    
-   reader_1->BookMVA("BDT method","dataset_1/weights/TMVAClassification_BDT.weights.xml");
-   reader_2->BookMVA("BDT method","dataset_2/weights/TMVAClassification_BDT.weights.xml");
-   reader_3->BookMVA("BDT method","dataset_3/weights/TMVAClassification_BDT.weights.xml");
+   TFile *input = new TFile(s1);
    
-   UInt_t nbin = 160;
-   TH1F  *histBDTG_ttH(0);
-   histBDTG_ttH  = new TH1F( "MVA_BDT_ttH",   "MVA_BDT_ttH",   nbin, -0.8, 0.8 );
-   TFile *input = new TFile("ZZ4lAnalysis_ttH.root","update");
-   std::cout << "--- TMVAMulticlassApp : Using input file: " << input->GetName() << std::endl;
     
    TTree* theTree = (TTree*)input->Get("ZZTree/candTree");
-   std::cout << "--- Select ttH sample" << std::endl;
+    
    theTree->SetBranchAddress( "p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal", &p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal );
    theTree->SetBranchAddress( "p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal", &p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal );
    theTree->SetBranchAddress( "p_JQCD_SIG_ghg2_1_JHUGen_JECNominal", &p_JQCD_SIG_ghg2_1_JHUGen_JECNominal );
@@ -1177,14 +1255,19 @@ void Analyzer :: HiggsProduction_Application()
    theTree->SetBranchAddress( "nCleanedJetsPt30", &c );
    theTree->SetBranchAddress( "xsec", &xsec );
    theTree->SetBranchAddress( "overallEventWeight", &overallEventWeight );
+   theTree->SetBranchAddress( "PFMET", &PFMET );
+   theTree->SetBranchAddress( "ZZPt", &ZZPt );
+   theTree->SetBranchAddress( "DiJetMass", &DiJetMass );
+   theTree->SetBranchAddress( "DiJetDEta", &DiJetDEta );
+   theTree->SetBranchAddress( "ZZEta", &ZZEta );
+   theTree->SetBranchAddress( "ZZPhi", &ZZPhi );
+   theTree->SetBranchAddress( "ZZjjPt", &ZZjjPt );
+   theTree->SetBranchAddress( "DiJetFisher", &DiJetFisher );
+   
+   h1 = (TH1F*)input->Get("ZZTree/Counters");
    std::cout << "--- Processing: " << theTree->GetEntries() << " events" << std::endl;
-   TStopwatch sw;
-   sw.Start();
-   Float_t s=0,t1,t2,t3;
+   Float_t ttH_events=0,VH_events=0,VBF_events=0,Untagged_events=0;
    for (Long64_t ievt=0; ievt<theTree->GetEntries();ievt++) {
-      if (ievt%1000 == 0){
-         std::cout << "--- ... Processing event: " << ievt << std::endl;
-      }
       theTree->GetEntry(ievt);
 	  D_VBF2j=1./(1.+ p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal/p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal);
 	  D_VBF1j= 1./(1.+p_JQCD_SIG_ghg2_1_JHUGen_JECNominal/(p_JVBF_SIG_ghv1_1_JHUGen_JECNominal*pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal));
@@ -1193,32 +1276,309 @@ void Analyzer :: HiggsProduction_Application()
       	nCleanedJetsPt30BTagged=a;	
 		nExtraLep=b;
 		nCleanedJetsPt30=c;
-		double w=137000*xsec*overallEventWeight/257544.9375;
-		if(ZZMass>118 && ZZMass<130)
-		{
-			histBDTG_ttH->Fill((reader_1->EvaluateMVA( "BDT method" )),w);
-            if((reader_1->EvaluateMVA( "BDT method" ))>0.12)
-              s+=w;
- 		     t1=reader_1->EvaluateMVA( "BDT method" );
-			 t2=reader_2->EvaluateMVA( "BDT method" );
-			 t3=reader_3->EvaluateMVA( "BDT method" );
-			 cout<<t1<<" "<<t2<<" "<<t3<<endl;
-        }			
+        double w=137000*xsec*overallEventWeight/h1->GetBinContent(40);
+        if(s1.Contains("ggH125"))
+	{			
+		 
+			 if((reader_1->EvaluateMVA( "BDT method" ))>ttH_cut)
+			{
+            if(nExtraLep>=1 || nCleanedJetsPt30<=3)
+            Histo_ggH125_BDT->Fill(0.5,w); 
+            //ttHl+=w;
+            else
+            Histo_ggH125_BDT->Fill(1.5,w); 
+            //ttHh+=w;
+         }
+             else if((reader_2->EvaluateMVA( "BDT method" ))>VH_cut)
+			{
+            if(nExtraLep>=1)
+            Histo_ggH125_BDT->Fill(2.5,w); 
+            //VHl+=w;
+            else
+            Histo_ggH125_BDT->Fill(3.5,w); 
+            //VHh+=w;
+         }
+            else if((reader_3->EvaluateMVA( "BDT method" ))>VBF_cut)
+			{
+            if(nCleanedJetsPt30<=1)
+            Histo_ggH125_BDT->Fill(4.5,w);
+            //VBF1j+=w;
+            else
+            Histo_ggH125_BDT->Fill(5.5,w);
+            //VBF2j+=w;
+         }
+            else
+            Histo_ggH125_BDT->Fill(6.5,w);			
+         
+	}
+        if(s1.Contains("WplusH125")||s1.Contains("WminusH125")||s1.Contains("ZH125"))
+	{			
+		 
+			 if((reader_1->EvaluateMVA( "BDT method" ))>ttH_cut)
+			{ 
+            if(nExtraLep>=1 || nCleanedJetsPt30<=3)
+            Histo_VH125_BDT->Fill(0.5,w);
+            //ttHl+=w;
+            else
+            Histo_VH125_BDT->Fill(1.5,w);
+            //ttHh+=w;
+         }
+             else if((reader_2->EvaluateMVA( "BDT method" ))>VH_cut)
+			{
+            if(nExtraLep>=1)
+            Histo_VH125_BDT->Fill(2.5,w);
+            //VHl+=w;
+            else
+            Histo_VH125_BDT->Fill(3.5,w);
+            //VHh+=w;
+         }
+            else if((reader_3->EvaluateMVA( "BDT method" ))>VBF_cut)
+			{
+            if(nCleanedJetsPt30<=1)
+            Histo_VH125_BDT->Fill(4.5,w);
+            //VBF1j+=w;
+            else
+            Histo_VH125_BDT->Fill(5.5,w);
+            //VBF2j+=w;
+         }
+            else
+            Histo_VH125_BDT->Fill(6.5,w);			
+         
+	}
+        if(s1.Contains("VBFH125"))
+	{			
+		 
+			 if((reader_1->EvaluateMVA( "BDT method" ))>ttH_cut) 
+			{ 
+            if(nExtraLep>=1 || nCleanedJetsPt30<=3)
+            Histo_VBFH125_BDT->Fill(0.5,w);
+            //ttHl+=w;
+            else
+            Histo_VBFH125_BDT->Fill(1.5,w);
+            ttHh+=w;
+         }
+             else if((reader_2->EvaluateMVA( "BDT method" ))>VH_cut)
+			{
+            if(nExtraLep>=1)
+            Histo_VBFH125_BDT->Fill(2.5,w);
+            //VHl+=w;
+            else
+            Histo_VBFH125_BDT->Fill(3.5,w);
+            //VHh+=w;
+         }
+            else if((reader_3->EvaluateMVA( "BDT method" ))>VBF_cut)
+			{
+            if(nCleanedJetsPt30<=1)
+            Histo_VBFH125_BDT->Fill(4.5,w);
+            //VBF1j+=w;
+            else
+            Histo_VBFH125_BDT->Fill(5.5,w);
+            //VBF2j+=w;
+         }
+            else
+            Histo_VBFH125_BDT->Fill(6.5,w);			
+         
+	}
+        if(s1.Contains("ttH125"))
+	{			
+		 
+			 if((reader_1->EvaluateMVA( "BDT method" ))>ttH_cut)
+			{ 
+            if(nExtraLep>=1 || nCleanedJetsPt30<=3)
+            Histo_ttH125_BDT->Fill(0.5,w);
+            //ttHl+=w;
+            else
+            Histo_ttH125_BDT->Fill(1.5,w);
+            //ttHh+=w;
+         }
+             else if((reader_2->EvaluateMVA( "BDT method" ))>VH_cut)
+			{
+            if(nExtraLep>=1)
+            Histo_ttH125_BDT->Fill(2.5,w);
+            //VHl+=w;
+            else
+            Histo_ttH125_BDT->Fill(3.5,w);
+            //VHh+=w;
+         }
+            else if((reader_3->EvaluateMVA( "BDT method" ))>VBF_cut)
+			{
+            if(nCleanedJetsPt30<=1)
+            Histo_ttH125_BDT->Fill(4.5,w);
+            //VBF1j+=w;
+            else
+            Histo_ttH125_BDT->Fill(5.5,w);
+            //VBF2j+=w;
+         }
+            else
+            Histo_ttH125_BDT->Fill(6.5,w);			
+         
+	}   	
    }
-   cout<<s<<endl;
+   /*cout<<ttHl<<" "<<ttHh<<endl;
+   cout<<VHl<<" "<<VHh<<endl;
+   cout<<VBF1j<<" "<<VBF2j<<endl;*/
+   //cout<<ttH_events<<" "<<VH_events<<" "<<VBF_events<<" "<<Untagged_events<<endl;
    
-   sw.Stop();
-   std::cout << "--- End of event loop: "; sw.Print();
    TFile *target  = new TFile( "TMVAClassificationApplication.root","RECREATE" );
-    
-   histBDTG_ttH->Write();
-    
+      
    target->Close();
-   std::cout << "--- Created root file: \"TMVMulticlassApp.root\" containing the MVA output histograms" << std::endl;
+   
    delete reader_1;
-   std::cout << "==> TMVAMulticlassApp is done!" << std::endl << std::endl;
+   delete reader_2;
+   delete reader_3;
+   
 }
 
+void Analyzer :: CategorizeBDT_Display()
+{
+	int i;
+	gStyle->SetOptStat(0);
+	const char *categories[7]={"ttH-leptonic tagged ","ttH-hadronic tagged ","VH-leptonic tagged ","VH-hadronic tagged ","VBF-2jet tagged "," VBF-1jet tagged"," Untagged"};
+	Histo_ggH125_BDT->SetTitle("ggH");
+	Histo_VBFH125_BDT->SetTitle("VBF");
+	Histo_ttH125_BDT->SetTitle("ttH");
+	Histo_VH125_BDT->SetTitle("VH");
+	for (i=1;i<=7;i++) 
+	{
+		Histo_ggH125_BDT->GetXaxis()->SetBinLabel(i,categories[i-1]);
+		Histo_VBFH125_BDT->GetXaxis()->SetBinLabel(i,categories[i-1]);
+		Histo_ttH125_BDT->GetXaxis()->SetBinLabel(i,categories[i-1]);
+		Histo_VH125_BDT->GetXaxis()->SetBinLabel(i,categories[i-1]);
+	}
+	Histo_ggH125_BDT->SetFillColor(kBlue);
+	Histo_VBFH125_BDT->SetFillColor(kGreen+2);
+	Histo_ttH125_BDT->SetFillColor(kMagenta);
+	Histo_VH125_BDT->SetFillColor(kRed);
+	Histo_ggH125_BDT->GetYaxis()->SetTitle("Expected events");
+	Histo_VBFH125_BDT->GetYaxis()->SetTitle("Expected events");
+	Histo_ttH125_BDT->GetYaxis()->SetTitle("Expected events");
+	Histo_VH125_BDT->GetYaxis()->SetTitle("Expected events");
+	
+	TCanvas *canvas_categories_1=new TCanvas("ggH125","ggH125",1400,800);
+	canvas_categories_1->Divide(2,2);
+	
+	Histo_ggH125_BDT->GetYaxis()->SetTitleSize(0.05);
+	Histo_ggH125_BDT->GetXaxis()->SetLabelSize(0.08);
+    Histo_ggH125_BDT->GetYaxis()->SetLabelSize(0.04);
+    Histo_ggH125_BDT->SetBarOffset(0.1);
+	Histo_ggH125_BDT->SetBarWidth(0.8);
+	canvas_categories_1->cd(1);
+	gPad->SetLeftMargin(0.35);
+	Histo_ggH125_BDT->Draw("hbar");
+	
+	Histo_VBFH125_BDT->GetYaxis()->SetTitleSize(0.05);
+	Histo_VBFH125_BDT->GetXaxis()->SetLabelSize(0.08);
+	Histo_VBFH125_BDT->GetYaxis()->SetLabelSize(0.04);
+	Histo_VBFH125_BDT->SetBarOffset(0.1);
+	Histo_VBFH125_BDT->SetBarWidth(0.8);
+	canvas_categories_1->cd(2);
+	gPad->SetLeftMargin(0.25);
+	Histo_VBFH125_BDT->Draw("hbar");
+	
+	Histo_ttH125_BDT->GetYaxis()->SetTitleSize(0.05);
+	Histo_ttH125_BDT->GetXaxis()->SetLabelSize(0.08);
+	Histo_ttH125_BDT->GetYaxis()->SetLabelSize(0.04);
+	Histo_ttH125_BDT->SetBarOffset(0.1);
+	Histo_ttH125_BDT->SetBarWidth(0.8);
+	canvas_categories_1->cd(3);
+	gPad->SetLeftMargin(0.35);
+	Histo_ttH125_BDT->Draw("hbar");
+	
+	Histo_VH125_BDT->GetYaxis()->SetTitleSize(0.05);
+	Histo_VH125_BDT->GetXaxis()->SetLabelSize(0.08);
+	Histo_VH125_BDT->GetYaxis()->SetLabelSize(0.04);
+	Histo_VH125_BDT->SetBarOffset(0.1);
+	Histo_VH125_BDT->SetBarWidth(0.8);
+	canvas_categories_1->cd(4);
+	gPad->SetLeftMargin(0.25);
+	Histo_VH125_BDT->GetYaxis()->SetRangeUser(0., 5.);
+	Histo_VH125_BDT->Draw("hbar");
+	
+	//canvas_categories_1->SaveAs("Categorization_BDT.png");
+	
+	double VBF2j_exp_events=Histo_ggH125_BDT->Integral(5,5)+Histo_VBFH125_BDT->Integral(5,5)+Histo_ttH125_BDT->Integral(5,5)+Histo_VH125_BDT->Integral(5,5);
+	double VHh_exp_events=Histo_ggH125_BDT->Integral(4,4)+Histo_VBFH125_BDT->Integral(4,4)+Histo_ttH125_BDT->Integral(4,4)+Histo_VH125_BDT->Integral(4,4);
+	double VHl_exp_events=Histo_ggH125_BDT->Integral(3,3)+Histo_VBFH125_BDT->Integral(3,3)+Histo_ttH125_BDT->Integral(3,3)+Histo_VH125_BDT->Integral(3,3);
+	double ttHh_exp_events=Histo_ggH125_BDT->Integral(2,2)+Histo_VBFH125_BDT->Integral(2,2)+Histo_ttH125_BDT->Integral(2,2)+Histo_VH125_BDT->Integral(2,2);
+	double ttHl_exp_events=Histo_ggH125_BDT->Integral(1,1)+Histo_VBFH125_BDT->Integral(1,1)+Histo_ttH125_BDT->Integral(1,1)+Histo_VH125_BDT->Integral(1,1);
+	double VBF1j_exp_events=Histo_ggH125_BDT->Integral(6,6)+Histo_VBFH125_BDT->Integral(6,6)+Histo_ttH125_BDT->Integral(6,6)+Histo_VH125_BDT->Integral(6,6);
+	double Untagged_exp_events=Histo_ggH125_BDT->Integral(7,7)+Histo_VBFH125_BDT->Integral(7,7)+Histo_ttH125_BDT->Integral(7,7)+Histo_VH125_BDT->Integral(7,7);
+	
+	//cout<<ttH_exp_events<<" "<<VH_exp_events<<" "<<VBFH_exp_events<<" "<<Untagged_exp_events<<endl;
+	
+	double exp_events[7]={ttHl_exp_events,ttHh_exp_events,VHl_exp_events,VHh_exp_events,VBF2j_exp_events,VBF1j_exp_events,Untagged_exp_events};
+	
+   cout<<"ttH:"<<endl;
+   cout<<(Histo_ggH125_BDT->Integral(1,1)+Histo_ggH125_BDT->Integral(2,2))/(exp_events[0]+exp_events[1])<<endl;
+   cout<<(Histo_VBFH125_BDT->Integral(1,1)+Histo_VBFH125_BDT->Integral(2,2))/(exp_events[0]+exp_events[1])<<endl;
+   cout<<(Histo_ttH125_BDT->Integral(1,1)+Histo_ttH125_BDT->Integral(2,2))/(exp_events[0]+exp_events[1])<<" "<<Histo_ttH125_BDT->Integral(1,1)+Histo_ttH125_BDT->Integral(2,2)<<endl;
+   cout<<(Histo_VH125_BDT->Integral(1,1)+Histo_VH125_BDT->Integral(2,2))/(exp_events[0]+exp_events[1])<<endl;
+   cout<<"VH:"<<endl;
+   cout<<(Histo_ggH125_BDT->Integral(3,3)+Histo_ggH125_BDT->Integral(4,4))/(exp_events[2]+exp_events[3])<<endl;
+   cout<<(Histo_VBFH125_BDT->Integral(3,3)+Histo_VBFH125_BDT->Integral(4,4))/(exp_events[2]+exp_events[3])<<endl;
+   cout<<(Histo_ttH125_BDT->Integral(3,3)+Histo_ttH125_BDT->Integral(4,4))/(exp_events[2]+exp_events[3])<<endl;
+   cout<<(Histo_VH125_BDT->Integral(3,3)+Histo_VH125_BDT->Integral(4,4))/(exp_events[2]+exp_events[3])<<" "<<Histo_VH125_BDT->Integral(3,3)+Histo_VH125_BDT->Integral(4,4)<<endl;
+   cout<<"VBFH:"<<endl;
+   cout<<(Histo_ggH125_BDT->Integral(5,5)+Histo_ggH125_BDT->Integral(6,6))/(exp_events[4]+exp_events[5])<<endl;
+   cout<<(Histo_VBFH125_BDT->Integral(5,5)+Histo_VBFH125_BDT->Integral(6,6))/(exp_events[4]+exp_events[5])<<" "<<Histo_VBFH125_BDT->Integral(5,5)+Histo_VBFH125_BDT->Integral(6,6)<<endl;
+   cout<<(Histo_ttH125_BDT->Integral(5,5)+Histo_ttH125_BDT->Integral(6,6))/(exp_events[4]+exp_events[5])<<endl;
+   cout<<(Histo_VH125_BDT->Integral(5,5)+Histo_VH125_BDT->Integral(6,6))/(exp_events[4]+exp_events[5])<<endl;
+   cout<<"Untagged:"<<endl;
+   cout<<(Histo_ggH125_BDT->Integral(7,7) )/(exp_events[6] )<<" "<<Histo_ggH125_BDT->Integral(7,7)<<endl;
+   cout<<(Histo_VBFH125_BDT->Integral(7,7) )/(exp_events[6] )<<endl;
+   cout<<(Histo_ttH125_BDT->Integral(7,7) )/(exp_events[6] )<<endl;
+   cout<<(Histo_VH125_BDT->Integral(7,7) )/(exp_events[6] )<<endl;
+
+   cout<<endl<<ttHl_exp_events+ttHh_exp_events<<" "<<VHl_exp_events+VHh_exp_events<<" "<<VBF1j_exp_events+VBF2j_exp_events<<" "<<Untagged_exp_events<<endl;
+	
+	for(i=1;i<=7;i++)
+	{
+	  Histo_ggH125_BDT->SetBinContent(i,Histo_ggH125_BDT->Integral(i,i)/exp_events[i-1]);	
+	  Histo_VBFH125_BDT->SetBinContent(i,Histo_VBFH125_BDT->Integral(i,i)/exp_events[i-1]);
+	  Histo_ttH125_BDT->SetBinContent(i,Histo_ttH125_BDT->Integral(i,i)/exp_events[i-1]);
+	  Histo_VH125_BDT->SetBinContent(i,Histo_VH125_BDT->Integral(i,i)/exp_events[i-1]);
+	}
+   //for(i=0;i<7;i++)
+   //cout<<exp_events[i]<<endl;
+	THStack *stack = new THStack("stack","BDT Categorization (simulation) ; ;fraction");
+	TCanvas *master_canvas=new TCanvas("master","master",1400,800);
+	TLegend* legend=new TLegend(0.9,0.7,0.98,0.9);
+	legend->AddEntry(Histo_ggH125_BDT,"ggH","f");
+	legend->AddEntry(Histo_VBFH125_BDT,"VBFH","f");
+	legend->AddEntry(Histo_ttH125_BDT,"ttH","f");
+	legend->AddEntry(Histo_VH125_BDT,"VH","f");
+	gPad->SetLeftMargin(0.15);
+	TLatex *t1=new TLatex(0.3,0.35,"0.73 exp. events");
+	TLatex *t2=new TLatex(0.3,1.35,"0.88 exp. events");
+	TLatex *t3=new TLatex(0.3,2.35,"1.51 exp. events");
+	TLatex *t4=new TLatex(0.3,3.35,"6.42 exp. events");
+	TLatex *t5=new TLatex(0.3,4.35,"15.19 exp. events");
+	TLatex *t6=new TLatex(0.3,5.35,"14.68 exp. events");
+	TLatex *t7=new TLatex(0.3,6.35,"180.01 exp. events");
+	t1->SetTextColor(kWhite);
+	t2->SetTextColor(kWhite);
+	t1->SetTextColor(kWhite);
+	t3->SetTextColor(kWhite);
+	t4->SetTextColor(kWhite);
+	t5->SetTextColor(kWhite);
+	t6->SetTextColor(kWhite);
+	t7->SetTextColor(kWhite);
+	stack->Add(Histo_ggH125_BDT);
+	stack->Add(Histo_VBFH125_BDT);
+	stack->Add(Histo_ttH125_BDT);
+	stack->Add(Histo_VH125_BDT);
+	stack->Draw("hbar");
+	legend->Draw();
+	t1->Draw();
+	t2->Draw();
+	t3->Draw();
+	t4->Draw();
+   t5->Draw();
+	t6->Draw();
+	t7->Draw();
+	//master_canvas->SaveAs("Categorization_BDT_stack.png");
+   //stack
+}
 
 
 

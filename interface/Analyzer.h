@@ -1442,8 +1442,8 @@ public :
    TBranch        *b_p_Gen_GG_SIG_gXg5_1_gXz9_1_JHUGen;   //!
    TBranch        *b_p_Gen_GG_SIG_gXg5_1_gXz10_1_JHUGen;   //!
 
-   Analyzer(); //nema argumenta (dodano)
-   virtual ~Analyzer(); //nema argumenta
+   Analyzer(); 
+   virtual ~Analyzer(); 
    virtual Int_t    Cut(Long64_t entry);
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
@@ -1458,11 +1458,12 @@ public :
    virtual void TMVAMultiClass();
    virtual void TMVAMultiClassApplication();
    virtual void HiggsProduction_Training();
-   virtual void HiggsProduction_Application();
+   virtual void HiggsProduction_Application(TString s1);
+   virtual void CategorizeBDT_Display();
    public:
    	TTree *tree;
-   	TH1F* h1; //dodano
-   	
+   	TH1F* h1; 
+      Float_t ttHh=0, ttHl=0, VBF1j=0,VBF2j=0, VHh=0,VHl=0;	
     //PMFET
 	TH1* Histo_PFMET_ggH125 = new TH1F("PFMET_ggH125", "PFMET_ggH125", 50, 0, 250);  
    	TH1* Histo_PFMET_VBFH125 = new TH1F("PFMET_VBFH125", "PFMET_VBFH125", 50, 0, 250);
@@ -1521,12 +1522,17 @@ public :
 	TH1F *Histo_VBFH125=new TH1F("VBFH125","VBFH125",7,0,7);
 	TH1F *Histo_ttH125=new TH1F("ttH125","ttH125",7,0,7);
 	TH1F *Histo_VH125=new TH1F("VH125","VH125",7,0,7);
+	
+	TH1F *Histo_ggH125_BDT=new TH1F("gH125_BDT","ggH125_BDT",7,0,7);
+	TH1F *Histo_VBFH125_BDT=new TH1F("VBFH125_BDT","VBFH125_BDT",7,0,7);
+	TH1F *Histo_ttH125_BDT=new TH1F("ttH125_BDT","ttH125_BDT",7,0,7);
+	TH1F *Histo_VH125_BDT=new TH1F("VH125_BDT","VH125_BDT",7,0,7);
 };
 
 #endif
 
 #ifdef Analyzer_cxx
-Analyzer::Analyzer() : fChain(0) //dodano (jer ucitavanje ovdje necu radit unutar klase)
+Analyzer::Analyzer() : fChain(0)  
 {
      
 }
