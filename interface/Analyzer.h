@@ -1464,58 +1464,106 @@ public :
    	TTree *tree;
    	TH1F* h1; 
       Float_t ttHh=0, ttHl=0, VBF1j=0,VBF2j=0, VHh=0,VHl=0;	
-    //PMFET
-	TH1* Histo_PFMET_ggH125 = new TH1F("PFMET_ggH125", "PFMET_ggH125", 50, 0, 250);  
-   	TH1* Histo_PFMET_VBFH125 = new TH1F("PFMET_VBFH125", "PFMET_VBFH125", 50, 0, 250);
-	TH1* Histo_PFMET_ttH125 = new TH1F("PFMET_ttH125", "PFMET_ttH125", 50, 0, 250);
-	TH1* Histo_PFMET_ZZTo4lext1 = new TH1F("PFMET_ZZTo4lext1", "PFMET_ZZTo4lext1", 50, 0, 250);
+   
 	//nCleanedJetsPt30
 	TH1* Histo_nCleanedJetsPt30_ggH125 = new TH1F("nCleanedJetsPt30_ggH125", "nCleanedJetsPt30_ggH125", 11, 0, 11);  
-   	TH1* Histo_nCleanedJetsPt30_VBFH125 = new TH1F("nCleanedJetsPt30_VBFH125", "nCleanedJetsPt30_VBFH125", 11, 0, 11);
+   TH1* Histo_nCleanedJetsPt30_VBFH125 = new TH1F("nCleanedJetsPt30_VBFH125", "nCleanedJetsPt30_VBFH125", 11, 0, 11);
 	TH1* Histo_nCleanedJetsPt30_ttH125 = new TH1F("nCleanedJetsPt30_ttH125", "nCleanedJetsPt30_ttH125", 11, 0, 11);
-	TH1* Histo_nCleanedJetsPt30_ZZTo4lext1 = new TH1F("nCleanedJetsPt30_ZZTo4lext1", "nCleanedJetsPt30_ZZTo4lext1", 11, 0, 11);
+	TH1* Histo_nCleanedJetsPt30_WH125 = new TH1F("nCleanedJetsPt30_WH125", "nCleanedJetsPt30_WH125", 11, 0, 11);
+   TH1* Histo_nCleanedJetsPt30_ZH125 = new TH1F("nCleanedJetsPt30_ZH125", "nCleanedJetsPt30_ZH125", 11, 0, 11);
 	//nCleanedJetsPt30BTagged
-	TH1* Histo_nCleanedJetsPt30BTagged_ggH125 = new TH1F("nCleanedJetsPt30BTagged_ggH125", "nCleanedJetsPt30BTagged_ggH125", 5, 0, 5);  
-   	TH1* Histo_nCleanedJetsPt30BTagged_VBFH125 = new TH1F("nCleanedJetsPt30BTagged_VBFH125", "nCleanedJetsPt30BTagged_VBFH125", 5, 0, 5);
-	TH1* Histo_nCleanedJetsPt30BTagged_ttH125 = new TH1F("nCleanedJetsPt30BTagged_ttH", "nCleanedJetsPt30BTagged_ttH", 5, 0, 5);
-	TH1* Histo_nCleanedJetsPt30BTagged_ZZTo4lext1 = new TH1F("nCleanedJetsPt30BTagged_ZZTo4lext1", "nCleanedJetsPt30BTagged_ZZTo4lext1", 5, 0, 5);
-	//ZZPt
-	TH1* Histo_ZZPt_ggH125 = new TH1F("ZZPt_ggH125", "ZZPt_ggH125", 50, 0, 250);  
-   	TH1* Histo_ZZPt_VBFH125 = new TH1F("ZZPt_VBFH125", "ZZPt_VBFH125", 50, 0, 250);
-	TH1* Histo_ZZPt_ttH125 = new TH1F("ZZPt_ttH125", "ZZPt_ttH125", 50, 0, 250);
-	TH1* Histo_ZZPt_ZZTo4lext1 = new TH1F("ZZPt_ZZTo4lext1", "ZZPt_ZZTo4lext1", 50, 0, 250);
-	//Z1Pt
-	TH1* Histo_Z1Pt_ggH125 = new TH1F("Z1Pt_ggH125", "Z1Pt_ggH125", 50, 0, 250);  
-   	TH1* Histo_Z1Pt_VBFH125 = new TH1F("Z1Pt_VBFH125", "Z1Pt_VBFH125", 50, 0, 250);
-	TH1* Histo_Z1Pt_ttH125 = new TH1F("Z1Pt_ttH125", "Z1Pt_ttH125", 50, 0, 250);
-	TH1* Histo_Z1Pt_ZZTo4lext1 = new TH1F("Z1Pt_ZZTo4lext1", "Z1Pt_ZZTo4lext1", 50, 0, 250);
-	//Z2Pt
-	TH1* Histo_Z2Pt_ggH125 = new TH1F("Z2Pt_ggH125", "Z2Pt_ggH125", 50, 0, 250);  
-   	TH1* Histo_Z2Pt_VBFH125 = new TH1F("Z2Pt_VBFH125", "Z2Pt_VBFH125", 50, 0, 250);
-	TH1* Histo_Z2Pt_ttH125 = new TH1F("Z2Pt_ttH125", "Z2Pt_ttH125", 50, 0, 250);
-	TH1* Histo_Z2Pt_ZZTo4lext1 = new TH1F("Z2Pt_ZZTo4lext1", "Z2Pt_ZZTo4lext1", 50, 0, 250);
-	//PhotonPt
-	TH1* Histo_PhotonPt_ggH125 = new TH1F("PhotonPt_ggH125", "PhotonPt_ggH125", 40, 0, 200);  
-   	TH1* Histo_PhotonPt_VBFH125 = new TH1F("PhotonPt_VBFH125", "PhotonPt_VBFH125", 40, 0, 200);
-	TH1* Histo_PhotonPt_ttH125 = new TH1F("PhotonPt_ttH125", "PhotonPt_ttH125", 40, 0, 200);
-	TH1* Histo_PhotonPt_ZZTo4lext1 = new TH1F("PhotonPt_ZZTo4lext1", "PhotonPt_ZZTo4lext1", 40, 0, 200);
+	TH1* Histo_nCleanedJetsPt30BTagged_ggH125 = new TH1F("nCleanedJetsPt30BTagged_ggH125", "nCleanedJetsPt30BTagged_ggH125", 4, 0, 4);  
+   TH1* Histo_nCleanedJetsPt30BTagged_VBFH125 = new TH1F("nCleanedJetsPt30BTagged_VBFH125", "nCleanedJetsPt30BTagged_VBFH125", 4, 0, 4);
+	TH1* Histo_nCleanedJetsPt30BTagged_ttH125 = new TH1F("nCleanedJetsPt30BTagged_ttH125", "nCleanedJetsPt30BTagged_ttH125", 4, 0, 4);
+	TH1* Histo_nCleanedJetsPt30BTagged_WH125 = new TH1F("nCleanedJetsPt30BTagged_WH125", "nCleanedJetsPt30BTagged_WH125", 4, 0, 4);
+   TH1* Histo_nCleanedJetsPt30BTagged_ZH125 = new TH1F("nCleanedJetsPt30BTagged_ZH125", "nCleanedJetsPt30BTagged_ZH125", 4, 0, 4);
 	//nExtraLep
-	TH1* Histo_nExtraLep_ggH125 = new TH1F("nExtraLep_ggH125", "nExtraLep_ggH125", 4, 0, 4);  
-   	TH1* Histo_nExtraLep_VBFH125 = new TH1F("nExtraLep_VBFH125", "nExtraLep_VBFH125", 4, 0, 4);
-	TH1* Histo_nExtraLep_ttH125 = new TH1F("nExtraLep_ttH125", "nExtraLep_ttH125", 4, 0, 4);
-	TH1* Histo_nExtraLep_ZZTo4lext1 = new TH1F("nExtraLep_ZZTo4lext1", "nExtraLep_ZZTo4lext1", 4, 0, 4);
+	TH1* Histo_nExtraLep_ggH125 = new TH1F("nExtraLep_ggH125", "nExtraLep_ggH125", 3, 0, 3);  
+   TH1* Histo_nExtraLep_VBFH125 = new TH1F("nExtraLep_VBFH125", "nExtraLep_VBFH125", 3, 0, 3);
+	TH1* Histo_nExtraLep_ttH125 = new TH1F("nExtraLep_ttH125", "nExtraLep_ttH125", 3, 0, 3);
+	TH1* Histo_nExtraLep_WH125 = new TH1F("nExtraLep_WH125", "nExtraLep_WH125", 3, 0, 3);
+   TH1* Histo_nExtraLep_ZH125 = new TH1F("nExtraLep_ZH125", "nExtraLep_ZH125", 3, 0, 3);
 	//nExtraZ
-	TH1* Histo_nExtraZ_ggH125 = new TH1F("nExtraZ_ggH125", "nExtraZ_ggH125", 3, 0, 3);  
-   	TH1* Histo_nExtraZ_VBFH125 = new TH1F("nExtraZ_VBFH125", "nExtraZ_VBFH125", 3, 0, 3);
-	TH1* Histo_nExtraZ_ttH125 = new TH1F("nExtraZ_ttH125", "nExtraZ_ttH125", 3, 0, 3);
-	TH1* Histo_nExtraZ_ZZTo4lext1 = new TH1F("nExtraZ_ZZTo4lext1", "nExtraZ_ZZTo4lext1", 3, 0, 3);
+	TH1* Histo_nExtraZ_ggH125 = new TH1F("nExtraZ_ggH125", "nExtraZ_ggH125", 2, 0, 2);  
+   TH1* Histo_nExtraZ_VBFH125 = new TH1F("nExtraZ_VBFH125", "nExtraZ_VBFH125", 2, 0, 2);
+	TH1* Histo_nExtraZ_ttH125 = new TH1F("nExtraZ_ttH125", "nExtraZ_ttH125", 2, 0, 2);
+	TH1* Histo_nExtraZ_WH125 = new TH1F("nExtraZ_WH125", "nExtraZ_WH125", 2, 0, 2);
+   TH1* Histo_nExtraZ_ZH125 = new TH1F("nExtraZ_ZH125", "nExtraZ_ZH125", 2, 0, 2);
 	
-	//DiJetMass
+   //D_VBF2j
+	TH1* Histo_D_VBF2j_ggH125 = new TH1F("D_VBF2j_ggH125", "D_VBF2j_ggH125", 20, 0, 1);  
+   TH1* Histo_D_VBF2j_VBFH125 = new TH1F("D_VBF2j_VBFH125", "D_VBF2j_VBFH125", 20, 0, 1);
+
+   //D_VBF1j
+	TH1* Histo_D_VBF1j_ggH125 = new TH1F("D_VBF1j_ggH125", "D_VBF1j_ggH125", 20, 0, 1);  
+   TH1* Histo_D_VBF1j_VBFH125 = new TH1F("D_VBF1j_VBFH125", "D_VBF1j_VBFH125", 20, 0, 1);
+
+   //D_WH
+	TH1* Histo_D_WH_ggH125 = new TH1F("D_WH_ggH125", "D_WH_ggH125", 20, 0, 1);  
+   TH1* Histo_D_WH_WH125 = new TH1F("D_WH_WH125", "D_WH_WH125", 20, 0, 1);
+
+   //D_ZH
+	TH1* Histo_D_ZH_ggH125 = new TH1F("D_ZH_ggH125", "D_ZH_ggH125", 20, 0, 1);  
+   TH1* Histo_D_ZH_ZH125 = new TH1F("D_ZH_WH125", "D_ZH_ZH125", 20, 0, 1);
+
+    //PMFET
+	TH1* Histo_PFMET_ggH125 = new TH1F("PFMET_ggH125", "PFMET_ggH125", 50, 0, 250);  
+   TH1* Histo_PFMET_VBFH125 = new TH1F("PFMET_VBFH125", "PFMET_VBFH125", 50, 0, 250);
+	TH1* Histo_PFMET_ttH125 = new TH1F("PFMET_ttH125", "PFMET_ttH125", 50, 0, 250);
+	TH1* Histo_PFMET_WH125 = new TH1F("PFMET_WH125", "PFMET_WH125", 50, 0, 250);
+   TH1* Histo_PFMET_ZH125 = new TH1F("PFMET_ZH125", "PFMET_ZH125", 50, 0, 250);
+
+   //ZZPt
+	TH1* Histo_ZZPt_ggH125 = new TH1F("ZZPt_ggH125", "ZZPt_ggH125", 50, 0, 250);  
+   TH1* Histo_ZZPt_VBFH125 = new TH1F("ZZPt_VBFH125", "ZZPt_VBFH125", 50, 0, 250);
+	TH1* Histo_ZZPt_ttH125 = new TH1F("ZZPt_ttH125", "ZZPt_ttH125", 50, 0, 250);
+	TH1* Histo_ZZPt_WH125 = new TH1F("ZZPt_WH125", "ZZPt_WH125", 50, 0, 250); 
+   TH1* Histo_ZZPt_ZH125 = new TH1F("ZZPt_ZH125", "ZZPt_ZH125", 50, 0, 250);
+
+   //DiJetMass
 	TH1* Histo_DiJetMass_ggH125 = new TH1F("DiJetMass_ggH125", "DiJetMass_ggH125", 40, 0, 1600);  
-   	TH1* Histo_DiJetMass_VBFH125 = new TH1F("DiJetMass_VBFH125", "DiJetMass_VBFH125", 40, 0, 1600);
-	TH1* Histo_DiJetMass_ttH125 = new TH1F("DiJetMass_ttH125", "DiJetMass_ttH125", 40, 0, 200);
-	TH1* Histo_DiJetMass_ZZTo4lext1 = new TH1F("DiJetMass_ZZTo4lext1", "DiJetMass_ZZTo4lext1", 40, 0, 1600);
-	
+   TH1* Histo_DiJetMass_VBFH125 = new TH1F("DiJetMass_VBFH125", "DiJetMass_VBFH125", 40, 0, 1600);
+	TH1* Histo_DiJetMass_ttH125 = new TH1F("DiJetMass_ttH125", "DiJetMass_ttH125", 40, 0, 1600);
+	TH1* Histo_DiJetMass_WH125 = new TH1F("DiJetMass_WH125", "DiJetMass_WH125", 40, 0, 1600);
+   TH1* Histo_DiJetMass_ZH125 = new TH1F("DiJetMass_ZH125", "DiJetMass_ZH125", 40, 0, 1600);
+
+   //ZZjjPt
+	TH1* Histo_ZZjjPt_ggH125 = new TH1F("ZZjjPt_ggH125", "ZZjjPt_ggH125", 40, 0, 200);  
+   TH1* Histo_ZZjjPt_VBFH125 = new TH1F("ZZjjPt_VBFH125", "ZZjjPt_VBFH125", 40, 0, 200);
+	TH1* Histo_ZZjjPt_ttH125 = new TH1F("ZZjjPt_ttH125", "ZZjjPt_ttH125", 40, 0, 200);
+	TH1* Histo_ZZjjPt_WH125 = new TH1F("ZZjjPt_WH125", "ZZjjPt_WH125", 40, 0, 200);
+   TH1* Histo_ZZjjPt_ZH125 = new TH1F("ZZjjPt_ZH125", "ZZjjPt_ZH125", 40, 0, 200);
+
+   //DiJetDEta
+	TH1* Histo_DiJetDEta_ggH125 = new TH1F("DiJetDEta_ggH125", "DiJetDEta_ggH125", 18, -9, 9);  
+   TH1* Histo_DiJetDEta_VBFH125 = new TH1F("DiJetDEta_VBFH125", "DiJetDEta_VBFH125", 18, -9, 9);
+	TH1* Histo_DiJetDEta_ttH125 = new TH1F("DiJetDEta_ttH125", "DiJetDEta_ttH125", 18, -9, 9);
+	TH1* Histo_DiJetDEta_WH125 = new TH1F("DiJetDEta_WH125", "DiJetDEta_WH125", 18, -9, 9);
+   TH1* Histo_DiJetDEta_ZH125 = new TH1F("DiJetDEta_ZH125", "DiJetDEta_ZH125", 18, -9, 9);
+
+   //ZZEta
+   TH1* Histo_ZZEta_ggH125 = new TH1F("ZZEta_ggH125", "ZZEta_ggH125", 12, -6, 6);  
+   TH1* Histo_ZZEta_VBFH125 = new TH1F("ZZEta_VBFH125", "ZZEta_VBFH125", 12, -6, 6);
+	TH1* Histo_ZZEta_ttH125 = new TH1F("ZZEta_ttH125", "ZZEta_ttH125", 12, -6, 6);
+	TH1* Histo_ZZEta_WH125 = new TH1F("ZZEta_WH125", "ZZEta_WH125", 12, -6, 6);
+   TH1* Histo_ZZEta_ZH125 = new TH1F("ZZEta_ZH125", "ZZEta_ZH125", 12, -6, 6);
+
+   //ZZPhi
+   TH1* Histo_ZZPhi_ggH125 = new TH1F("ZZPhi_ggH125", "ZZPhi_ggH125", 10, -5, 5);  
+   TH1* Histo_ZZPhi_VBFH125 = new TH1F("ZZPhi_VBFH125", "ZZPhi_VBFH125", 10, -5, 5);
+	TH1* Histo_ZZPhi_ttH125 = new TH1F("ZZPhi_ttH125", "ZZPhi_ttH125", 10, -5, 5);
+	TH1* Histo_ZZPhi_WH125 = new TH1F("ZZPhi_WH125", "ZZPhi_WH125", 10, -5, 5);
+   TH1* Histo_ZZPhi_ZH125 = new TH1F("ZZPhi_ZH125", "ZZPhi_ZH125", 10, -5, 5);
+
+   //DiJetFisher
+   TH1* Histo_DiJetFisher_ggH125 = new TH1F("DiJetFisher_ggH125", "DiJetFisher_ggH125", 3, 0, 3);  
+   TH1* Histo_DiJetFisher_VBFH125 = new TH1F("DiJetFisher_VBFH125", "DiJetFisher_VBFH125", 3, 0, 3);
+	TH1* Histo_DiJetFisher_ttH125 = new TH1F("DiJetFisher_ttH125", "DiJetFisher_ttH125", 3, 0, 3);
+	TH1* Histo_DiJetFisher_WH125 = new TH1F("DiJetFisher_WH125", "DiJetFisher_WH125", 3, 0, 3);
+   TH1* Histo_DiJetFisher_ZH125 = new TH1F("DiJetFisher_ZH125", "DiJetFisher_ZH125", 3, 0, 3);
+
+
+
 	//Categories
 	 
 	TH1F *Histo_ggH125=new TH1F("gH125","ggH125",7,0,7);
