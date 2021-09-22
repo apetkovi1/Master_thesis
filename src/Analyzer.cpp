@@ -19,6 +19,9 @@
 #include <cassert>
 #include <cmath>
 #include <iostream>
+#include<TLine.h>
+#include<TLatex.h>
+#include <TStyle.h>
 cConstantSpline::cConstantSpline(const TString& filename) : filename_(filename), spline_(nullptr) {}
 
 void cConstantSpline::initspline(bool isDbkg) {
@@ -95,325 +98,595 @@ void Analyzer::Fill_Histogram(TString s)
 	  w=137000*xsec*overallEventWeight/h1->GetBinContent(40);
       if(s.Contains("ggH125"))
 	  {
-		  Histo_PFMET_ggH125->Fill(PFMET,w);
+          float c_Mela2j = getDVBF2jetsConstant(ZZMass);
+          float D_VBF2j=1./(1.+ c_Mela2j*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal/p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal);
+	       float c_Mela1j = getDVBF1jetConstant(ZZMass);
+          float D_VBF1j = 1./(1.+ c_Mela1j*p_JQCD_SIG_ghg2_1_JHUGen_JECNominal/(p_JVBF_SIG_ghv1_1_JHUGen_JECNominal*pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal));
+	       float c_MelaWH = getDWHhConstant(ZZMass);
+	       float D_WHh = 1./(1.+ c_MelaWH*(p_HadWH_mavjj_true_JECNominal*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal)/(p_HadWH_mavjj_JECNominal*p_HadWH_SIG_ghw1_1_JHUGen_JECNominal));
+	       float c_MelaZH = getDZHhConstant(ZZMass);
+          float D_ZHh = 1./(1.+ c_MelaZH*(p_HadZH_mavjj_true_JECNominal*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal)/(p_HadZH_mavjj_JECNominal*p_HadZH_SIG_ghz1_1_JHUGen_JECNominal));
+		    if(nCleanedJetsPt30>=2)
+          {
+             Histo_D_VBF2j_ggH125->Fill(D_VBF2j,w);
+             Histo_D_WH_ggH125->Fill(D_WHh,w);
+             Histo_D_ZH_ggH125->Fill(D_ZHh,w);
+          }
+          if(nCleanedJetsPt30==1)
+          Histo_D_VBF1j_ggH125->Fill(D_VBF1j,w);
           Histo_nCleanedJetsPt30_ggH125->Fill(nCleanedJetsPt30,w);
           Histo_nCleanedJetsPt30BTagged_ggH125->Fill(nCleanedJetsPt30BTagged,w);
-          Histo_ZZPt_ggH125->Fill(ZZPt,w);
-          Histo_Z1Pt_ggH125->Fill(Z1Pt,w);
-          Histo_Z2Pt_ggH125->Fill(Z2Pt,w);
-          Histo_PhotonPt_ggH125->Fill(*max_element(PhotonPt->begin(),PhotonPt->end()),w); 
           Histo_nExtraLep_ggH125->Fill(nExtraLep,w);
           Histo_nExtraZ_ggH125->Fill(nExtraZ,w);
-		  if(DiJetMass>0)
-          Histo_DiJetMass_ggH125->Fill(DiJetMass,w);	  
+          Histo_ZZPt_ggH125->Fill(ZZPt,w);
+          Histo_PFMET_ggH125->Fill(PFMET,w);
+		    if(DiJetMass>0)
+          Histo_DiJetMass_ggH125->Fill(DiJetMass,w);
+          Histo_ZZEta_ggH125->Fill(ZZEta,w);
+          Histo_ZZPhi_ggH125->Fill(ZZPhi,w);
+          Histo_DiJetDEta_ggH125->Fill(DiJetDEta,w);
+          Histo_ZZjjPt_ggH125->Fill(ZZjjPt,w);
+          Histo_DiJetFisher_ggH125->Fill(DiJetFisher,w);	  
 	  }	  
       if(s.Contains("VBFH125"))
 	  {
-		  Histo_PFMET_VBFH125->Fill(PFMET,w);
+          float c_Mela2j = getDVBF2jetsConstant(ZZMass);
+          float D_VBF2j=1./(1.+ c_Mela2j*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal/p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal);
+	       float c_Mela1j = getDVBF1jetConstant(ZZMass);
+          float D_VBF1j = 1./(1.+ c_Mela1j*p_JQCD_SIG_ghg2_1_JHUGen_JECNominal/(p_JVBF_SIG_ghv1_1_JHUGen_JECNominal*pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal));
+	       float c_MelaWH = getDWHhConstant(ZZMass);
+	       float D_WHh = 1./(1.+ c_MelaWH*(p_HadWH_mavjj_true_JECNominal*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal)/(p_HadWH_mavjj_JECNominal*p_HadWH_SIG_ghw1_1_JHUGen_JECNominal));
+	       float c_MelaZH = getDZHhConstant(ZZMass);
+          float D_ZHh = 1./(1.+ c_MelaZH*(p_HadZH_mavjj_true_JECNominal*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal)/(p_HadZH_mavjj_JECNominal*p_HadZH_SIG_ghz1_1_JHUGen_JECNominal));
+		    if(nCleanedJetsPt30>=2)
+          Histo_D_VBF2j_VBFH125->Fill(D_VBF2j,w);
+          if(nCleanedJetsPt30==1)
+          Histo_D_VBF1j_VBFH125->Fill(D_VBF1j,w);
           Histo_nCleanedJetsPt30_VBFH125->Fill(nCleanedJetsPt30,w);	
           Histo_nCleanedJetsPt30BTagged_VBFH125->Fill(nCleanedJetsPt30BTagged,w);
-          Histo_ZZPt_VBFH125->Fill(ZZPt,w);
-          Histo_Z1Pt_VBFH125->Fill(Z1Pt,w);
-          Histo_Z2Pt_VBFH125->Fill(Z2Pt,w);	
-          Histo_PhotonPt_VBFH125->Fill(*max_element(PhotonPt->begin(),PhotonPt->end()),w);
           Histo_nExtraLep_VBFH125->Fill(nExtraLep,w);
           Histo_nExtraZ_VBFH125->Fill(nExtraZ,w);
-		  if(DiJetMass>0)
-          Histo_DiJetMass_VBFH125->Fill(DiJetMass,w);		  
+		    Histo_ZZPt_VBFH125->Fill(ZZPt,w);
+          if(DiJetMass>0)
+          Histo_DiJetMass_VBFH125->Fill(DiJetMass,w);
+          Histo_PFMET_VBFH125->Fill(PFMET,w);
+          Histo_ZZjjPt_VBFH125->Fill(ZZjjPt,w);
+          Histo_ZZEta_VBFH125->Fill(ZZEta,w);
+          Histo_ZZPhi_VBFH125->Fill(ZZPhi,w);
+          Histo_DiJetDEta_VBFH125->Fill(DiJetDEta,w);
+          Histo_DiJetFisher_VBFH125->Fill(DiJetFisher,w);		  
       }
 	  if(s.Contains("ttH125"))
 	  {
-		  Histo_PFMET_ttH125->Fill(PFMET,w);
-          Histo_nCleanedJetsPt30_ttH125->Fill(nCleanedJetsPt30,w);
-          Histo_nCleanedJetsPt30BTagged_ttH125->Fill(nCleanedJetsPt30BTagged,w);
-          Histo_ZZPt_ttH125->Fill(ZZPt,w);
-          Histo_Z1Pt_ttH125->Fill(Z1Pt,w);
-          Histo_Z2Pt_ttH125->Fill(Z2Pt,w);
-          Histo_PhotonPt_ttH125->Fill(*max_element(PhotonPt->begin(),PhotonPt->end()),w);
-          Histo_nExtraLep_ttH125->Fill(nExtraLep,w);
-          Histo_nExtraZ_ttH125->Fill(nExtraZ,w);
-		  if(DiJetMass>0)
-          Histo_DiJetMass_ttH125->Fill(DiJetMass,w);		  
+         Histo_nCleanedJetsPt30_ttH125->Fill(nCleanedJetsPt30,w);
+         Histo_nCleanedJetsPt30BTagged_ttH125->Fill(nCleanedJetsPt30BTagged,w);
+         Histo_nExtraLep_ttH125->Fill(nExtraLep,w);
+         Histo_nExtraZ_ttH125->Fill(nExtraZ,w);
+         Histo_ZZPt_ttH125->Fill(ZZPt,w);
+		   if(DiJetMass>0)
+         Histo_DiJetMass_ttH125->Fill(DiJetMass,w);
+         Histo_PFMET_ttH125->Fill(PFMET,w);
+         Histo_ZZEta_ttH125->Fill(ZZEta,w);
+         Histo_ZZPhi_ttH125->Fill(ZZPhi,w);
+         Histo_DiJetDEta_ttH125->Fill(DiJetDEta,w);
+         Histo_ZZjjPt_ttH125->Fill(ZZjjPt,w);
+         Histo_DiJetFisher_ttH125->Fill(DiJetFisher,w);		  
       }
-	  if(s.Contains("ZZTo4lext1"))
-	  {
-		  Histo_PFMET_ZZTo4lext1->Fill(PFMET,w);
-          Histo_nCleanedJetsPt30_ZZTo4lext1->Fill(nCleanedJetsPt30,w);
-          Histo_nCleanedJetsPt30BTagged_ZZTo4lext1->Fill(nCleanedJetsPt30BTagged,w);
-          Histo_ZZPt_ZZTo4lext1->Fill(ZZPt,w);
-          Histo_Z1Pt_ZZTo4lext1->Fill(Z1Pt,w);
-          Histo_Z2Pt_ZZTo4lext1->Fill(Z2Pt,w);
-          Histo_PhotonPt_ZZTo4lext1->Fill(*max_element(PhotonPt->begin(),PhotonPt->end()),w);
-          Histo_nExtraLep_ZZTo4lext1->Fill(nExtraLep,w);
-          Histo_nExtraZ_ZZTo4lext1->Fill(nExtraZ,w);
-		  if(DiJetMass>0)
-          Histo_DiJetMass_ZZTo4lext1->Fill(DiJetMass,w);		  
+      if(s.Contains("WplusH")||s.Contains("WminusH"))
+	   {
+		   float c_Mela2j = getDVBF2jetsConstant(ZZMass);
+         float D_VBF2j=1./(1.+ c_Mela2j*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal/p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal);
+	      float c_Mela1j = getDVBF1jetConstant(ZZMass);
+         float D_VBF1j = 1./(1.+ c_Mela1j*p_JQCD_SIG_ghg2_1_JHUGen_JECNominal/(p_JVBF_SIG_ghv1_1_JHUGen_JECNominal*pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal));
+	      float c_MelaWH = getDWHhConstant(ZZMass);
+	      float D_WHh = 1./(1.+ c_MelaWH*(p_HadWH_mavjj_true_JECNominal*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal)/(p_HadWH_mavjj_JECNominal*p_HadWH_SIG_ghw1_1_JHUGen_JECNominal));
+	      float c_MelaZH = getDZHhConstant(ZZMass);
+         float D_ZHh = 1./(1.+ c_MelaZH*(p_HadZH_mavjj_true_JECNominal*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal)/(p_HadZH_mavjj_JECNominal*p_HadZH_SIG_ghz1_1_JHUGen_JECNominal));
+         if(nCleanedJetsPt30>=2)
+         Histo_D_WH_WH125->Fill(D_WHh,w);
+         Histo_nCleanedJetsPt30_WH125->Fill(nCleanedJetsPt30,w);
+         Histo_nCleanedJetsPt30BTagged_WH125->Fill(nCleanedJetsPt30BTagged,w);
+         Histo_nExtraLep_WH125->Fill(nExtraLep,w);
+         Histo_nExtraZ_WH125->Fill(nExtraZ,w);
+         Histo_ZZPt_WH125->Fill(ZZPt,w);
+		   if(DiJetMass>0)
+         Histo_DiJetMass_WH125->Fill(DiJetMass,w);
+         Histo_PFMET_WH125->Fill(PFMET,w);
+         Histo_ZZEta_WH125->Fill(ZZEta,w);
+         Histo_ZZPhi_WH125->Fill(ZZPhi,w);
+         Histo_DiJetDEta_WH125->Fill(DiJetDEta,w);
+         Histo_ZZjjPt_WH125->Fill(ZZjjPt,w);
+         Histo_DiJetFisher_WH125->Fill(DiJetFisher,w);	  
+      }
+      if(s.Contains("ZH"))
+	   {
+		   float c_Mela2j = getDVBF2jetsConstant(ZZMass);
+         float D_VBF2j=1./(1.+ c_Mela2j*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal/p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal);
+	      float c_Mela1j = getDVBF1jetConstant(ZZMass);
+         float D_VBF1j = 1./(1.+ c_Mela1j*p_JQCD_SIG_ghg2_1_JHUGen_JECNominal/(p_JVBF_SIG_ghv1_1_JHUGen_JECNominal*pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal));
+	      float c_MelaWH = getDWHhConstant(ZZMass);
+	      float D_WHh = 1./(1.+ c_MelaWH*(p_HadWH_mavjj_true_JECNominal*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal)/(p_HadWH_mavjj_JECNominal*p_HadWH_SIG_ghw1_1_JHUGen_JECNominal));
+	      float c_MelaZH = getDZHhConstant(ZZMass);
+         float D_ZHh = 1./(1.+ c_MelaZH*(p_HadZH_mavjj_true_JECNominal*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal)/(p_HadZH_mavjj_JECNominal*p_HadZH_SIG_ghz1_1_JHUGen_JECNominal));
+         if(nCleanedJetsPt30>=2)
+         Histo_D_ZH_ZH125->Fill(D_ZHh,w);	
+         Histo_nCleanedJetsPt30_ZH125->Fill(nCleanedJetsPt30,w);
+         Histo_nCleanedJetsPt30BTagged_ZH125->Fill(nCleanedJetsPt30BTagged,w);
+         Histo_nExtraLep_ZH125->Fill(nExtraLep,w);
+         Histo_nExtraZ_ZH125->Fill(nExtraZ,w);
+         Histo_ZZPt_ZH125->Fill(ZZPt,w);
+		   if(DiJetMass>0)
+         Histo_DiJetMass_ZH125->Fill(DiJetMass,w);
+         Histo_PFMET_ZH125->Fill(PFMET,w);
+         Histo_ZZEta_ZH125->Fill(ZZEta,w);
+         Histo_ZZPhi_ZH125->Fill(ZZPhi,w);
+         Histo_DiJetDEta_ZH125->Fill(DiJetDEta,w);
+         Histo_ZZjjPt_ZH125->Fill(ZZjjPt,w);
+         Histo_DiJetFisher_ZH125->Fill(DiJetFisher,w);  
       }
 	  }
 	   
 }
 void Analyzer :: Plot_Histogram()
 {
-	//PFMET
 	gStyle->SetOptStat(0);
-	TCanvas *PFMET_Canvas=new TCanvas("PFMET","PFMET",1600,800);
-	TLegend* PFMET_Legend=new TLegend(0.75,0.75,0.9,0.9);
+   
+   TCanvas *basic_Canvas=new TCanvas("","",1600,1200);
+	basic_Canvas->Divide(2,2);
+   //nCleanedJetsPt30
+	//TCanvas * nCleanedJetsPt30_Canvas=new TCanvas("nCleanedJetsPt30","nCleanedJetsPt30",1600,800);
+	basic_Canvas->cd(1);
+	TLegend*  nCleanedJetsPt30_Legend=new TLegend(0.75,0.65,0.9,0.9);
+	Histo_nCleanedJetsPt30_ggH125->Scale(1/Histo_nCleanedJetsPt30_ggH125->Integral());
+	Histo_nCleanedJetsPt30_VBFH125->Scale(1/Histo_nCleanedJetsPt30_VBFH125->Integral());
+	Histo_nCleanedJetsPt30_ttH125->Scale(1/Histo_nCleanedJetsPt30_ttH125->Integral());
+   Histo_nCleanedJetsPt30_WH125->Scale(1/Histo_nCleanedJetsPt30_WH125->Integral());
+   Histo_nCleanedJetsPt30_ZH125->Scale(1/Histo_nCleanedJetsPt30_ZH125->Integral());
+	nCleanedJetsPt30_Legend->AddEntry(Histo_nCleanedJetsPt30_ggH125,"ggH125","f");
+	nCleanedJetsPt30_Legend->AddEntry(Histo_nCleanedJetsPt30_VBFH125,"VBFH125","f");
+	nCleanedJetsPt30_Legend->AddEntry(Histo_nCleanedJetsPt30_ttH125,"ttH125","f");
+	nCleanedJetsPt30_Legend->AddEntry(Histo_nCleanedJetsPt30_WH125,"WH125","f");
+   nCleanedJetsPt30_Legend->AddEntry(Histo_nCleanedJetsPt30_ZH125,"ZH125","f");
+	Histo_nCleanedJetsPt30_ggH125->SetLineColor(kBlue);
+	Histo_nCleanedJetsPt30_VBFH125->SetLineColor(kGreen);
+	Histo_nCleanedJetsPt30_ttH125->SetLineColor(kMagenta);
+   Histo_nCleanedJetsPt30_WH125->SetLineColor(kRed+2);
+   Histo_nCleanedJetsPt30_ZH125->SetLineColor(kPink);
+	Histo_nCleanedJetsPt30_ggH125->SetTitle("");
+	Histo_nCleanedJetsPt30_ggH125->GetXaxis()->SetTitle("selected jets");
+	Histo_nCleanedJetsPt30_ggH125->GetYaxis()->SetTitle("normalized to 1");
+	Histo_nCleanedJetsPt30_ggH125->Draw("HIST SAME");
+   Histo_nCleanedJetsPt30_VBFH125->Draw("HIST SAME");
+	Histo_nCleanedJetsPt30_ttH125->Draw("HIST SAME");
+	Histo_nCleanedJetsPt30_WH125->Draw("HIST SAME");
+   Histo_nCleanedJetsPt30_ZH125->Draw("HIST SAME");
+	nCleanedJetsPt30_Legend->Draw();
+	//nCleanedJetsPt30_Canvas->SaveAs("nCleanedJetsPt30.pdf");
+	
+	//nCleanedJetsPt30BTagged
+	//TCanvas * nCleanedJetsPt30BTagged_Canvas=new TCanvas("nCleanedJetsPt30_BTagged","nCleanedJetsPt30_BTagged",1600,800);
+	basic_Canvas->cd(2);
+	TLegend*  nCleanedJetsPt30BTagged_Legend=new TLegend(0.75,0.65,0.9,0.9);
+	Histo_nCleanedJetsPt30BTagged_ggH125->Scale(1/Histo_nCleanedJetsPt30BTagged_ggH125->Integral());
+	Histo_nCleanedJetsPt30BTagged_VBFH125->Scale(1/Histo_nCleanedJetsPt30BTagged_VBFH125->Integral());
+	Histo_nCleanedJetsPt30BTagged_ttH125->Scale(1/Histo_nCleanedJetsPt30BTagged_ttH125->Integral());
+   Histo_nCleanedJetsPt30BTagged_WH125->Scale(1/Histo_nCleanedJetsPt30BTagged_WH125->Integral());
+   Histo_nCleanedJetsPt30BTagged_ZH125->Scale(1/Histo_nCleanedJetsPt30BTagged_ZH125->Integral());
+	nCleanedJetsPt30BTagged_Legend->AddEntry(Histo_nCleanedJetsPt30BTagged_ggH125,"ggH125","f");
+	nCleanedJetsPt30BTagged_Legend->AddEntry(Histo_nCleanedJetsPt30BTagged_VBFH125,"VBFH125","f");
+	nCleanedJetsPt30BTagged_Legend->AddEntry(Histo_nCleanedJetsPt30BTagged_ttH125,"ttH125","f");
+	nCleanedJetsPt30BTagged_Legend->AddEntry(Histo_nCleanedJetsPt30BTagged_WH125,"WH125","f");
+   nCleanedJetsPt30BTagged_Legend->AddEntry(Histo_nCleanedJetsPt30BTagged_ZH125,"ZH125","f");
+	Histo_nCleanedJetsPt30BTagged_ggH125->SetLineColor(kBlue);
+	Histo_nCleanedJetsPt30BTagged_VBFH125->SetLineColor(kGreen);
+	Histo_nCleanedJetsPt30BTagged_ttH125->SetLineColor(kMagenta);
+   Histo_nCleanedJetsPt30BTagged_WH125->SetLineColor(kRed+2);
+   Histo_nCleanedJetsPt30BTagged_ZH125->SetLineColor(kPink);
+	Histo_nCleanedJetsPt30BTagged_ggH125->SetTitle("");
+	Histo_nCleanedJetsPt30BTagged_ggH125->GetXaxis()->SetTitle("b-tagged jets");
+	Histo_nCleanedJetsPt30BTagged_ggH125->GetYaxis()->SetTitle("normalized to 1");
+	Histo_nCleanedJetsPt30BTagged_ggH125->Draw("HIST SAME");
+   Histo_nCleanedJetsPt30BTagged_VBFH125->Draw("HIST SAME");
+	Histo_nCleanedJetsPt30BTagged_ttH125->Draw("HIST SAME");
+	Histo_nCleanedJetsPt30BTagged_WH125->Draw("HIST SAME");
+   Histo_nCleanedJetsPt30BTagged_ZH125->Draw("HIST SAME");
+	nCleanedJetsPt30BTagged_Legend->Draw();
+	//nCleanedJetsPt30BTagged_Canvas->SaveAs("nCleanedJetsPt30BTagged.pdf");
+	
+	
+
+    //nExtraLep
+	 //TCanvas * nExtraLep_Canvas=new TCanvas("nExtraLep","nExtraLep",1600,800);
+	 basic_Canvas->cd(3);
+	 TLegend*  nExtraLep_Legend=new TLegend(0.75,0.7,0.9,0.9);
+	 Histo_nExtraLep_ggH125->Scale(1/Histo_nExtraLep_ggH125->Integral());
+	 Histo_nExtraLep_VBFH125->Scale(1/Histo_nExtraLep_VBFH125->Integral());
+	 Histo_nExtraLep_ttH125->Scale(1/Histo_nExtraLep_ttH125->Integral());
+    Histo_nExtraLep_WH125->Scale(1/Histo_nExtraLep_WH125->Integral());
+    Histo_nExtraLep_ZH125->Scale(1/Histo_nExtraLep_ZH125->Integral());
+	 //nExtraLep_Legend->AddEntry(Histo_nExtraLep_ggH125,"ggH125","f");
+	 nExtraLep_Legend->AddEntry(Histo_nExtraLep_VBFH125,"VBFH125","f");
+	 nExtraLep_Legend->AddEntry(Histo_nExtraLep_ttH125,"ttH125","f");
+	 nExtraLep_Legend->AddEntry(Histo_nExtraLep_WH125,"WH125","f");
+    nExtraLep_Legend->AddEntry(Histo_nExtraLep_ZH125,"ZH125","f");
+	 Histo_nExtraLep_ggH125->SetLineColor(kBlue);
+	 Histo_nExtraLep_VBFH125->SetLineColor(kGreen);
+	 Histo_nExtraLep_ttH125->SetLineColor(kMagenta);
+    Histo_nExtraLep_WH125->SetLineColor(kRed+2);
+    Histo_nExtraLep_ZH125->SetLineColor(kPink);
+	 Histo_nExtraLep_ggH125->SetTitle("");
+	 Histo_nExtraLep_ggH125->GetXaxis()->SetTitle("extra leptons");
+	 Histo_nExtraLep_ggH125->GetYaxis()->SetTitle("normalized to 1");
+	 Histo_nExtraLep_ggH125->Draw("HIST SAME");
+    Histo_nExtraLep_VBFH125->Draw("HIST SAME");
+	 Histo_nExtraLep_ttH125->Draw("HIST SAME");
+	 Histo_nExtraLep_WH125->Draw("HIST SAME");
+    Histo_nExtraLep_ZH125->Draw("HIST SAME");
+	 nExtraLep_Legend->Draw();
+	 //nExtraLep_Canvas->SaveAs("nExtraLep.pdf");
+
+    //nExtraZ
+	 //TCanvas * nExtraZ_Canvas=new TCanvas("nExtraZ","nExtraZ",1600,800);
+	 basic_Canvas->cd(4);
+	 TLegend*  nExtraZ_Legend=new TLegend(0.75,0.75,0.9,0.9);
+	 Histo_nExtraZ_ggH125->Scale(1/Histo_nExtraZ_ggH125->Integral());
+	 Histo_nExtraZ_VBFH125->Scale(1/Histo_nExtraZ_VBFH125->Integral());
+	 Histo_nExtraZ_ttH125->Scale(1/Histo_nExtraZ_ttH125->Integral());
+    Histo_nExtraZ_WH125->Scale(1/Histo_nExtraZ_WH125->Integral());
+    Histo_nExtraZ_ZH125->Scale(1/Histo_nExtraZ_ZH125->Integral());
+	 //nExtraZ_Legend->AddEntry(Histo_nExtraZ_ggH125,"ggH125","f");
+	 //nExtraZ_Legend->AddEntry(Histo_nExtraZ_VBFH125,"VBFH125","f");
+	 nExtraZ_Legend->AddEntry(Histo_nExtraZ_ttH125,"ttH125","f");
+	 nExtraZ_Legend->AddEntry(Histo_nExtraZ_WH125,"WH125","f");
+    nExtraZ_Legend->AddEntry(Histo_nExtraZ_ZH125,"ZH125","f");
+	 Histo_nExtraZ_ggH125->SetLineColor(kBlue);
+	 Histo_nExtraZ_VBFH125->SetLineColor(kGreen);
+	 Histo_nExtraZ_ttH125->SetLineColor(kMagenta);
+    Histo_nExtraZ_WH125->SetLineColor(kRed+2);
+    Histo_nExtraZ_ZH125->SetLineColor(kPink);
+	 Histo_nExtraZ_ggH125->SetTitle("");
+	 Histo_nExtraZ_ggH125->GetXaxis()->SetTitle("extra Z bosons");
+	 Histo_nExtraZ_ggH125->GetYaxis()->SetTitle("normalized to 1");
+	 Histo_nExtraZ_ggH125->Draw("HIST SAME");
+    Histo_nExtraZ_VBFH125->Draw("HIST SAME");
+	 Histo_nExtraZ_ttH125->Draw("HIST SAME");
+	 Histo_nExtraZ_WH125->Draw("HIST SAME");
+    Histo_nExtraZ_ZH125->Draw("HIST SAME");
+	 nExtraZ_Legend->Draw();
+	 //nExtraZ_Canvas->SaveAs("nExtraZ.pdf");
+
+    basic_Canvas->SaveAs("basic.pdf");
+	
+   TCanvas *D_Canvas=new TCanvas("","",1600,1200);
+   D_Canvas->Divide(2,2);
+   //D_VBF2j
+   //TCanvas *D_VBF2j_Canvas=new TCanvas("D_VBF2j","D_VBF2j",1600,800);
+	D_Canvas->cd(1);
+	TLegend* D_VBF2j_Legend=new TLegend(0.75,0.75,0.9,0.9);
+	Histo_D_VBF2j_ggH125->Scale(1/Histo_D_VBF2j_ggH125->Integral());
+	Histo_D_VBF2j_VBFH125->Scale(1/Histo_D_VBF2j_VBFH125->Integral());
+   D_VBF2j_Legend->AddEntry(Histo_D_VBF2j_ggH125,"ggH125","f");
+	D_VBF2j_Legend->AddEntry(Histo_D_VBF2j_VBFH125,"VBFH125","f");
+   Histo_D_VBF2j_ggH125->SetLineColor(kBlue);
+	Histo_D_VBF2j_VBFH125->SetLineColor(kGreen);
+   Histo_D_VBF2j_ggH125->SetTitle("");
+   Histo_D_VBF2j_ggH125->GetXaxis()->SetTitleSize(0.04);
+   Histo_D_VBF2j_ggH125->GetXaxis()->SetTitle("D^{ME}_{VBF-2j}");
+	Histo_D_VBF2j_ggH125->GetYaxis()->SetTitle("normalized to 1");
+   Histo_D_VBF2j_ggH125->Draw("HIST SAME");
+	Histo_D_VBF2j_VBFH125->Draw("HIST SAME");
+	D_VBF2j_Legend->Draw();
+	//D_VBF2j_Canvas->SaveAs("D_VBF2j.pdf"); 
+
+   //D_VBF1j 
+   //TCanvas *D_VBF1j_Canvas=new TCanvas("D_VBF1j","D_VBF1j",1600,800);
+	D_Canvas->cd(2);
+	TLegend* D_VBF1j_Legend=new TLegend(0.75,0.75,0.9,0.9);
+	Histo_D_VBF1j_ggH125->Scale(1/Histo_D_VBF1j_ggH125->Integral());
+	Histo_D_VBF1j_VBFH125->Scale(1/Histo_D_VBF1j_VBFH125->Integral());
+   D_VBF1j_Legend->AddEntry(Histo_D_VBF1j_ggH125,"ggH125","f");
+	D_VBF1j_Legend->AddEntry(Histo_D_VBF1j_VBFH125,"VBFH125","f");
+   Histo_D_VBF1j_ggH125->SetLineColor(kBlue);
+	Histo_D_VBF1j_VBFH125->SetLineColor(kGreen);
+   Histo_D_VBF1j_ggH125->SetTitle("");
+   Histo_D_VBF1j_ggH125->GetXaxis()->SetTitleSize(0.04);
+   Histo_D_VBF1j_ggH125->GetXaxis()->SetTitle("D^{ME}_{VBF-1j}");
+	Histo_D_VBF1j_ggH125->GetYaxis()->SetTitle("normalized to 1");
+   Histo_D_VBF1j_ggH125->Draw("HIST SAME");
+	Histo_D_VBF1j_VBFH125->Draw("HIST SAME");
+	D_VBF1j_Legend->Draw();
+	//D_VBF1j_Canvas->SaveAs("D_VBF1j.pdf");
+
+   //D_WH 
+   //TCanvas *D_WH_Canvas=new TCanvas("D_WH","D_WH",1600,800);
+	D_Canvas->cd(3);
+	TLegend* D_WH_Legend=new TLegend(0.65,0.75,0.8,0.9);
+	Histo_D_WH_ggH125->Scale(1/Histo_D_WH_ggH125->Integral());
+	Histo_D_WH_WH125->Scale(1/Histo_D_WH_WH125->Integral());
+   D_WH_Legend->AddEntry(Histo_D_WH_ggH125,"ggH125","f");
+	D_WH_Legend->AddEntry(Histo_D_WH_WH125,"WH125","f");
+   Histo_D_WH_ggH125->SetLineColor(kBlue);
+	Histo_D_WH_WH125->SetLineColor(kRed+2);
+   Histo_D_WH_WH125->GetXaxis()->SetTitleSize(0.04);
+   Histo_D_WH_WH125->SetTitle("");
+   Histo_D_WH_WH125->GetXaxis()->SetTitle("D^{ME}_{WH-hadr}");
+	Histo_D_WH_WH125->GetYaxis()->SetTitle("normalized to 1");
+   Histo_D_WH_WH125->Draw("HIST SAME");
+   Histo_D_WH_ggH125->Draw("HIST SAME");
+	D_WH_Legend->Draw();
+	//D_WH_Canvas->SaveAs("D_WH.pdf"); 
+
+   //D_ZH 
+   //TCanvas *D_ZH_Canvas=new TCanvas("D_ZH","D_ZH",1600,800);
+	D_Canvas->cd(4);
+	TLegend* D_ZH_Legend=new TLegend(0.65,0.75,0.8,0.9);
+	Histo_D_ZH_ggH125->Scale(1/Histo_D_ZH_ggH125->Integral());
+	Histo_D_ZH_ZH125->Scale(1/Histo_D_ZH_ZH125->Integral());
+   D_ZH_Legend->AddEntry(Histo_D_ZH_ggH125,"ggH125","f");
+	D_ZH_Legend->AddEntry(Histo_D_ZH_ZH125,"ZH125","f");
+   Histo_D_ZH_ggH125->SetLineColor(kBlue);
+	Histo_D_ZH_ZH125->SetLineColor(kPink);
+   Histo_D_ZH_ggH125->GetXaxis()->SetTitleSize(0.04);
+   Histo_D_ZH_ggH125->SetTitle("");
+   Histo_D_ZH_ggH125->GetXaxis()->SetTitle("D^{ME}_{ZH-hadr}");
+	Histo_D_ZH_ggH125->GetYaxis()->SetTitle("normalized to 1");
+   Histo_D_ZH_ggH125->Draw("HIST SAME");
+	Histo_D_ZH_ZH125->Draw("HIST SAME");
+	D_ZH_Legend->Draw();
+	//D_ZH_Canvas->SaveAs("D_ZH.pdf"); 
+
+   D_Canvas->SaveAs("Dis.pdf"); 
+
+   TCanvas *additional1_Canvas=new TCanvas("","",1600,1200);
+   additional1_Canvas->Divide(2,2);
+   //PFMET
+	//TCanvas *PFMET_Canvas=new TCanvas("PFMET","PFMET",1600,800);
+   additional1_Canvas->cd(1);
+	TLegend* PFMET_Legend=new TLegend(0.75,0.65,0.9,0.9);
 	Histo_PFMET_ggH125->Scale(1/Histo_PFMET_ggH125->Integral());
 	Histo_PFMET_VBFH125->Scale(1/Histo_PFMET_VBFH125->Integral());
 	Histo_PFMET_ttH125->Scale(1/Histo_PFMET_ttH125->Integral());
-	Histo_PFMET_ZZTo4lext1->Scale(1/Histo_PFMET_ZZTo4lext1->Integral());
+   Histo_PFMET_WH125->Scale(1/Histo_PFMET_WH125->Integral());
+   Histo_PFMET_ZH125->Scale(1/Histo_PFMET_ZH125->Integral());
 	PFMET_Legend->AddEntry(Histo_PFMET_ggH125,"ggH125","f");
 	PFMET_Legend->AddEntry(Histo_PFMET_VBFH125,"VBFH125","f");
 	PFMET_Legend->AddEntry(Histo_PFMET_ttH125,"ttH125","f");
-	PFMET_Legend->AddEntry(Histo_PFMET_ZZTo4lext1,"qqZZ","f");
+	PFMET_Legend->AddEntry(Histo_PFMET_WH125,"WH125","f");
+   PFMET_Legend->AddEntry(Histo_PFMET_ZH125,"ZH125","f");
 	Histo_PFMET_ggH125->SetLineColor(kBlue);
 	Histo_PFMET_VBFH125->SetLineColor(kGreen);
 	Histo_PFMET_ttH125->SetLineColor(kMagenta);
-	Histo_PFMET_ZZTo4lext1->SetLineColor(kRed+2);
-	Histo_PFMET_ggH125->SetTitle("Missing transverse momentum");
-	Histo_PFMET_ggH125->GetXaxis()->SetTitle("Pt_{miss}/GeV");
+   Histo_PFMET_WH125->SetLineColor(kRed+2);
+   Histo_PFMET_ZH125->SetLineColor(kPink);
+	Histo_PFMET_ggH125->SetTitle("");
+	Histo_PFMET_ggH125->GetXaxis()->SetTitle("missing transverse momentum");
 	Histo_PFMET_ggH125->GetYaxis()->SetTitle("normalized to 1");
 	Histo_PFMET_ggH125->Draw("HIST SAME");
 	Histo_PFMET_VBFH125->Draw("HIST SAME");
 	Histo_PFMET_ttH125->Draw("HIST SAME");
-	Histo_PFMET_ZZTo4lext1->Draw("HIST SAME");
+   Histo_PFMET_WH125->Draw("HIST SAME");
+   Histo_PFMET_ZH125->Draw("HIST SAME");
 	PFMET_Legend->Draw();
-	PFMET_Canvas->SaveAs("PFMET.pdf");
-	
-	//nCleanedJetsPt30
-	TCanvas * nCleanedJetsPt30_Canvas=new TCanvas("nCleanedJetsPt30","nCleanedJetsPt30",1600,800);
-	nCleanedJetsPt30_Canvas->cd();
-	TLegend*  nCleanedJetsPt30_Legend=new TLegend(0.75,0.75,0.9,0.9);
-	Histo_nCleanedJetsPt30_ggH125->Scale(1/Histo_nCleanedJetsPt30_ggH125->Integral());
-	Histo_nCleanedJetsPt30_VBFH125->Scale(1/Histo_nCleanedJetsPt30_VBFH125->Integral());
-	Histo_nCleanedJetsPt30_ttH125->Scale(1/Histo_nCleanedJetsPt30_ttH125->Integral());
-	Histo_nCleanedJetsPt30_ZZTo4lext1->Scale(1/Histo_nCleanedJetsPt30_ZZTo4lext1->Integral());
-	nCleanedJetsPt30_Legend->AddEntry(Histo_nCleanedJetsPt30_ggH125,"ggH125","f");
-	nCleanedJetsPt30_Legend->AddEntry(Histo_nCleanedJetsPt30_VBFH125,"VBFH125","f");
-	nCleanedJetsPt30_Legend->AddEntry(Histo_nCleanedJetsPt30_ttH125,"ttH125","f");
-	nCleanedJetsPt30_Legend->AddEntry(Histo_nCleanedJetsPt30_ZZTo4lext1,"qqZZ","f");
-	Histo_nCleanedJetsPt30_ggH125->SetLineColor(kBlue);
-	Histo_nCleanedJetsPt30_VBFH125->SetLineColor(kGreen);
-	Histo_nCleanedJetsPt30_ttH125->SetLineColor(kMagenta);
-	Histo_nCleanedJetsPt30_ZZTo4lext1->SetLineColor(kRed+2);
-	Histo_nCleanedJetsPt30_ZZTo4lext1->SetTitle("Jet number");
-	Histo_nCleanedJetsPt30_ZZTo4lext1->GetXaxis()->SetTitle("jets");
-	Histo_nCleanedJetsPt30_ZZTo4lext1->GetYaxis()->SetTitle("normalized to 1");
-	Histo_nCleanedJetsPt30_ZZTo4lext1->Draw("HIST SAME");
-	Histo_nCleanedJetsPt30_ggH125->Draw("HIST SAME");
-	Histo_nCleanedJetsPt30_VBFH125->Draw("HIST SAME");
-	Histo_nCleanedJetsPt30_ttH125->Draw("HIST SAME");
-	nCleanedJetsPt30_Legend->Draw();
-	nCleanedJetsPt30_Canvas->SaveAs("nCleanedJetsPt30.pdf");
-	
-	//nCleanedJetsPt30BTagged
-	TCanvas * nCleanedJetsPt30BTagged_Canvas=new TCanvas("nCleanedJetsPt30BTagged","nCleanedJetsPt30BTagged",1600,800);
-	nCleanedJetsPt30BTagged_Canvas->cd();
-	TLegend*  nCleanedJetsPt30BTagged_Legend=new TLegend(0.75,0.75,0.9,0.9);
-	Histo_nCleanedJetsPt30BTagged_ggH125->Scale(1/Histo_nCleanedJetsPt30BTagged_ggH125->Integral());
-	Histo_nCleanedJetsPt30BTagged_VBFH125->Scale(1/Histo_nCleanedJetsPt30BTagged_VBFH125->Integral());
-	Histo_nCleanedJetsPt30BTagged_ttH125->Scale(1/Histo_nCleanedJetsPt30BTagged_ttH125->Integral());
-	Histo_nCleanedJetsPt30BTagged_ZZTo4lext1->Scale(1/Histo_nCleanedJetsPt30BTagged_ZZTo4lext1->Integral());
-	nCleanedJetsPt30BTagged_Legend->AddEntry(Histo_nCleanedJetsPt30BTagged_ggH125,"ggH125","f");
-	nCleanedJetsPt30BTagged_Legend->AddEntry(Histo_nCleanedJetsPt30BTagged_VBFH125,"VBFH125","f");
-	nCleanedJetsPt30BTagged_Legend->AddEntry(Histo_nCleanedJetsPt30BTagged_ttH125,"ttH125","f");
-	nCleanedJetsPt30BTagged_Legend->AddEntry(Histo_nCleanedJetsPt30BTagged_ZZTo4lext1,"qqZZ","f");
-	Histo_nCleanedJetsPt30BTagged_ggH125->SetLineColor(kBlue);
-	Histo_nCleanedJetsPt30BTagged_VBFH125->SetLineColor(kGreen);
-	Histo_nCleanedJetsPt30BTagged_ttH125->SetLineColor(kMagenta);
-	Histo_nCleanedJetsPt30BTagged_ZZTo4lext1->SetLineColor(kRed+2);
-	Histo_nCleanedJetsPt30BTagged_ZZTo4lext1->SetTitle("Number of b-tagged jets");
-	Histo_nCleanedJetsPt30BTagged_ZZTo4lext1->GetXaxis()->SetTitle("jets");
-	Histo_nCleanedJetsPt30BTagged_ZZTo4lext1->GetYaxis()->SetTitle("normalized to 1");
-	Histo_nCleanedJetsPt30BTagged_ZZTo4lext1->Draw("HIST SAME");
-	Histo_nCleanedJetsPt30BTagged_ggH125->Draw("HIST SAME");
-	Histo_nCleanedJetsPt30BTagged_VBFH125->Draw("HIST SAME");
-	Histo_nCleanedJetsPt30BTagged_ttH125->Draw("HIST SAME");
-	nCleanedJetsPt30BTagged_Legend->Draw();
-	nCleanedJetsPt30BTagged_Canvas->SaveAs("nCleanedJetsPt30BTagged.pdf");
-	
-	//ZZPt
-	TCanvas *ZZPt_Canvas=new TCanvas("ZZPt","ZZPt",1600,800);
-	ZZPt_Canvas->cd();
-	TLegend* ZZPt_Legend=new TLegend(0.75,0.75,0.9,0.9);
+	//PFMET_Canvas->SaveAs("PFMET.pdf"); 
+
+   //ZZPt
+	//TCanvas *ZZPt_Canvas=new TCanvas("ZZPt","ZZPt",1600,800);
+	additional1_Canvas->cd(2);
+   TLegend* ZZPt_Legend=new TLegend(0.75,0.65,0.9,0.9);
 	Histo_ZZPt_ggH125->Scale(1/Histo_ZZPt_ggH125->Integral());
 	Histo_ZZPt_VBFH125->Scale(1/Histo_ZZPt_VBFH125->Integral());
 	Histo_ZZPt_ttH125->Scale(1/Histo_ZZPt_ttH125->Integral());
-	Histo_ZZPt_ZZTo4lext1->Scale(1/Histo_ZZPt_ZZTo4lext1->Integral());
+   Histo_ZZPt_WH125->Scale(1/Histo_ZZPt_WH125->Integral());
+   Histo_ZZPt_ZH125->Scale(1/Histo_ZZPt_ZH125->Integral());
 	ZZPt_Legend->AddEntry(Histo_ZZPt_ggH125,"ggH125","f");
 	ZZPt_Legend->AddEntry(Histo_ZZPt_VBFH125,"VBFH125","f");
 	ZZPt_Legend->AddEntry(Histo_ZZPt_ttH125,"ttH125","f");
-	ZZPt_Legend->AddEntry(Histo_ZZPt_ZZTo4lext1,"qqZZ","f");
+	ZZPt_Legend->AddEntry(Histo_ZZPt_WH125,"WH125","f");
+   ZZPt_Legend->AddEntry(Histo_ZZPt_ZH125,"ZH125","f");
 	Histo_ZZPt_ggH125->SetLineColor(kBlue);
 	Histo_ZZPt_VBFH125->SetLineColor(kGreen);
 	Histo_ZZPt_ttH125->SetLineColor(kMagenta);
-	Histo_ZZPt_ZZTo4lext1->SetLineColor(kRed+2);
-	Histo_ZZPt_ZZTo4lext1->SetTitle("Transverse momentum of 4 leptons");
-	Histo_ZZPt_ZZTo4lext1->GetXaxis()->SetTitle("Pt_{ZZ}/GeV");
-	Histo_ZZPt_ZZTo4lext1->GetYaxis()->SetTitle("normalized to 1");
-	Histo_ZZPt_ZZTo4lext1->Draw("HIST SAME");
+   Histo_ZZPt_WH125->SetLineColor(kRed+2);
+   Histo_ZZPt_ZH125->SetLineColor(kPink);
+	Histo_ZZPt_ggH125->SetTitle("");
+	Histo_ZZPt_ggH125->GetXaxis()->SetTitle("ZZ pair transverse momentum");
+	Histo_ZZPt_ggH125->GetYaxis()->SetTitle("normalized to 1");
 	Histo_ZZPt_ggH125->Draw("HIST SAME");
 	Histo_ZZPt_VBFH125->Draw("HIST SAME");
 	Histo_ZZPt_ttH125->Draw("HIST SAME");
+   Histo_ZZPt_WH125->Draw("HIST SAME");
+   Histo_ZZPt_ZH125->Draw("HIST SAME");
 	ZZPt_Legend->Draw();
-	ZZPt_Canvas->SaveAs("ZZPt.pdf");
+	//ZZPt_Canvas->SaveAs("ZZPt.pdf");
 
-    //Z1Pt
-	TCanvas *Z1Pt_Canvas=new TCanvas("Z1Pt","Z1Pt",1600,800);
-	Z1Pt_Canvas->cd();
-	TLegend* Z1Pt_Legend=new TLegend(0.75,0.75,0.9,0.9);
-	Histo_Z1Pt_ggH125->Scale(1/Histo_Z1Pt_ggH125->Integral());
-	Histo_Z1Pt_VBFH125->Scale(1/Histo_Z1Pt_VBFH125->Integral());
-	Histo_Z1Pt_ttH125->Scale(1/Histo_Z1Pt_ttH125->Integral());
-	Histo_Z1Pt_ZZTo4lext1->Scale(1/Histo_Z1Pt_ZZTo4lext1->Integral());
-	Z1Pt_Legend->AddEntry(Histo_Z1Pt_ggH125,"ggH125","f");
-	Z1Pt_Legend->AddEntry(Histo_Z1Pt_VBFH125,"VBFH125","f");
-	Z1Pt_Legend->AddEntry(Histo_Z1Pt_ttH125,"ttH125","f");
-	Z1Pt_Legend->AddEntry(Histo_Z1Pt_ZZTo4lext1,"qqZZ","f");
-	Histo_Z1Pt_ggH125->SetLineColor(kBlue);
-	Histo_Z1Pt_VBFH125->SetLineColor(kGreen);
-	Histo_Z1Pt_ttH125->SetLineColor(kMagenta);
-	Histo_Z1Pt_ZZTo4lext1->SetLineColor(kRed+2);
-	Histo_Z1Pt_ggH125->SetTitle("Transverse momentum of Z1 boson");
-	Histo_Z1Pt_ggH125->GetXaxis()->SetTitle("Pt_{Z1}/GeV");
-	Histo_Z1Pt_ggH125->GetYaxis()->SetTitle("normalized to 1");
-	Histo_Z1Pt_ggH125->Draw("HIST SAME");
-	Histo_Z1Pt_ZZTo4lext1->Draw("HIST SAME");
-	Histo_Z1Pt_VBFH125->Draw("HIST SAME");
-	Histo_Z1Pt_ttH125->Draw("HIST SAME");
-	Z1Pt_Legend->Draw();
-	Z1Pt_Canvas->SaveAs("Z1Pt.pdf");
-
-    //Z2Pt
-	TCanvas *Z2Pt_Canvas=new TCanvas("Z2Pt","Z2Pt",1600,800);
-	Z2Pt_Canvas->cd();
-	TLegend* Z2Pt_Legend=new TLegend(0.75,0.75,0.9,0.9);
-	Histo_Z2Pt_ggH125->Scale(1/Histo_Z2Pt_ggH125->Integral());
-	Histo_Z2Pt_VBFH125->Scale(1/Histo_Z2Pt_VBFH125->Integral());
-	Histo_Z2Pt_ttH125->Scale(1/Histo_Z2Pt_ttH125->Integral());
-	Histo_Z2Pt_ZZTo4lext1->Scale(1/Histo_Z2Pt_ZZTo4lext1->Integral());
-	Z2Pt_Legend->AddEntry(Histo_Z2Pt_ggH125,"ggH125","f");
-	Z2Pt_Legend->AddEntry(Histo_Z2Pt_VBFH125,"VBFH125","f");
-	Z2Pt_Legend->AddEntry(Histo_Z2Pt_ttH125,"ttH125","f");
-	Z2Pt_Legend->AddEntry(Histo_Z2Pt_ZZTo4lext1,"qqZZ","f");
-	Histo_Z2Pt_ggH125->SetLineColor(kBlue);
-	Histo_Z2Pt_VBFH125->SetLineColor(kGreen);
-	Histo_Z2Pt_ttH125->SetLineColor(kMagenta);
-	Histo_Z2Pt_ZZTo4lext1->SetLineColor(kRed+2);
-	Histo_Z2Pt_ggH125->SetTitle("Transverse momentum of Z2 boson");
-	Histo_Z2Pt_ggH125->GetXaxis()->SetTitle("Pt_{Z2}/GeV");
-	Histo_Z2Pt_ggH125->GetYaxis()->SetTitle("normalized to 1");
-	Histo_Z2Pt_ggH125->Draw("HIST SAME");
-	Histo_Z2Pt_ZZTo4lext1->Draw("HIST SAME");
-	Histo_Z2Pt_VBFH125->Draw("HIST SAME");
-	Histo_Z2Pt_ttH125->Draw("HIST SAME");
-	Z2Pt_Legend->Draw();
-	Z2Pt_Canvas->SaveAs("Z2Pt.pdf");
-
-    //PhotonPt
-	TCanvas *PhotonPt_Canvas=new TCanvas("PhotonPt","PhotonPt",1600,800);
-	PhotonPt_Canvas->cd();
-	TLegend* PhotonPt_Legend=new TLegend(0.75,0.75,0.9,0.9);
-	Histo_PhotonPt_ggH125->Scale(1/Histo_PhotonPt_ggH125->Integral());
-	Histo_PhotonPt_VBFH125->Scale(1/Histo_PhotonPt_VBFH125->Integral());
-	Histo_PhotonPt_ttH125->Scale(1/Histo_PhotonPt_ttH125->Integral());
-	Histo_PhotonPt_ZZTo4lext1->Scale(1/Histo_PhotonPt_ZZTo4lext1->Integral());
-	PhotonPt_Legend->AddEntry(Histo_PhotonPt_ggH125,"ggH125","f");
-	PhotonPt_Legend->AddEntry(Histo_PhotonPt_VBFH125,"VBFH125","f");
-	PhotonPt_Legend->AddEntry(Histo_PhotonPt_ttH125,"ttH125","f");
-	PhotonPt_Legend->AddEntry(Histo_PhotonPt_ZZTo4lext1,"qqZZ","f");
-	Histo_PhotonPt_ggH125->SetLineColor(kBlue);
-	Histo_PhotonPt_VBFH125->SetLineColor(kGreen);
-	Histo_PhotonPt_ttH125->SetLineColor(kMagenta);
-	Histo_PhotonPt_ZZTo4lext1->SetLineColor(kRed+2);
-	Histo_PhotonPt_ggH125->SetTitle("Maximum transverse momentum of photon");
-	Histo_PhotonPt_ggH125->GetXaxis()->SetTitle("Pt_{#gamma}/GeV");
-	Histo_PhotonPt_ggH125->GetYaxis()->SetTitle("normalized to 1");
-	Histo_PhotonPt_ggH125->Draw("HIST SAME");
-	Histo_PhotonPt_ZZTo4lext1->Draw("HIST SAME");
-	Histo_PhotonPt_VBFH125->Draw("HIST SAME");
-	Histo_PhotonPt_ttH125->Draw("HIST SAME");
-	PhotonPt_Legend->Draw();
-	PhotonPt_Canvas->SaveAs("PhotonPt.pdf");
-
-    //nExtraLep
-	TCanvas *nExtraLep_Canvas=new TCanvas("nExtraLep","nExtraLep",1600,800);
-	nExtraLep_Canvas->cd();
-	TLegend* nExtraLep_Legend=new TLegend(0.75,0.75,0.9,0.9);
-	Histo_nExtraLep_ggH125->Scale(1/Histo_nExtraLep_ggH125->Integral());
-	Histo_nExtraLep_VBFH125->Scale(1/Histo_nExtraLep_VBFH125->Integral());
-	Histo_nExtraLep_ttH125->Scale(1/Histo_nExtraLep_ttH125->Integral());
-	Histo_nExtraLep_ZZTo4lext1->Scale(1/Histo_nExtraLep_ZZTo4lext1->Integral());
-	//nExtraLep_Legend->AddEntry(Histo_nExtraLep_ggH125,"ggH125","f");  nema dodatnih leptona
-	nExtraLep_Legend->AddEntry(Histo_nExtraLep_VBFH125,"VBFH125","f");
-	nExtraLep_Legend->AddEntry(Histo_nExtraLep_ttH125,"ttH125","f");
-	//nExtraLep_Legend->AddEntry(Histo_nExtraLep_ZZTo4lext1,"qqZZ","f"); nema dodatnih leptona
-	Histo_nExtraLep_ggH125->SetLineColor(kBlue);
-	Histo_nExtraLep_VBFH125->SetLineColor(kGreen);
-	Histo_nExtraLep_ttH125->SetLineColor(kMagenta);
-	Histo_nExtraLep_ZZTo4lext1->SetLineColor(kRed+2);
-	Histo_nExtraLep_VBFH125->SetTitle("Number of extra leptons");
-	Histo_nExtraLep_VBFH125->GetXaxis()->SetTitle("extra leptons");
-	Histo_nExtraLep_VBFH125->GetYaxis()->SetTitle("normalized to 1");
-	//Histo_nExtraLep_ggH125->Draw("HIST SAME");
-	//Histo_nExtraLep_ZZTo4lext1->Draw("HIST SAME"); 
-	Histo_nExtraLep_VBFH125->Draw("HIST SAME");
-	Histo_nExtraLep_ttH125->Draw("HIST SAME");
-	nExtraLep_Legend->Draw();
-	nExtraLep_Canvas->SaveAs("nExtraLep.pdf");
-
-    //nExtraZ
-	TCanvas *nExtraZ_Canvas=new TCanvas("nExtraZ","nExtraZ",1600,800);
-	nExtraZ_Canvas->cd();
-	TLegend* nExtraZ_Legend=new TLegend(0.75,0.75,0.9,0.9);
-	Histo_nExtraZ_ggH125->Scale(1/Histo_nExtraZ_ggH125->Integral());
-	Histo_nExtraZ_VBFH125->Scale(1/Histo_nExtraZ_VBFH125->Integral());
-	Histo_nExtraZ_ttH125->Scale(1/Histo_nExtraZ_ttH125->Integral());
-	Histo_nExtraZ_ZZTo4lext1->Scale(1/Histo_nExtraZ_ZZTo4lext1->Integral());
-	//nExtraZ_Legend->AddEntry(Histo_nExtraZ_ggH125,"ggH125","f");  nema dodatnih Z bozona
-	nExtraZ_Legend->AddEntry(Histo_nExtraZ_VBFH125,"VBFH125","f");
-	nExtraZ_Legend->AddEntry(Histo_nExtraZ_ttH125,"ttH125","f");
-	//nExtraZ_Legend->AddEntry(Histo_nExtraZ_ZZTo4lext1,"qqZZ","f");  nema dodatnih Z bozona
-	Histo_nExtraZ_ggH125->SetLineColor(kBlue);
-	Histo_nExtraZ_VBFH125->SetLineColor(kGreen);
-	Histo_nExtraZ_ttH125->SetLineColor(kMagenta);
-	Histo_nExtraZ_ZZTo4lext1->SetLineColor(kRed+2);
-	Histo_nExtraZ_VBFH125->SetTitle("Number of extra Z bosons");
-	Histo_nExtraZ_VBFH125->GetXaxis()->SetTitle("extra Z bosons");
-	Histo_nExtraZ_VBFH125->GetYaxis()->SetTitle("normalized to 1");
-	//Histo_nExtraZ_ggH125->Draw("HIST SAME");
-	//Histo_nExtraZ_ZZTo4lext1->Draw("HIST SAME");  
-	Histo_nExtraZ_VBFH125->Draw("HIST SAME");
-	Histo_nExtraZ_ttH125->Draw("HIST SAME");
-	nExtraZ_Legend->Draw();
-	nExtraZ_Canvas->SaveAs("nExtraZ.pdf");	
-	
-	//DiJetMass
-	TCanvas *DiJetMass_Canvas=new TCanvas("DiJetMass","DiJetMass",1600,800);
-	DiJetMass_Canvas->cd();
-	TLegend* DiJetMass_Legend=new TLegend(0.75,0.75,0.9,0.9);
+   //DiJetMass
+	//TCanvas *DiJetMass_Canvas=new TCanvas("DiJetMass","DiJetMass",1600,800);
+	additional1_Canvas->cd(3);
+   TLegend* DiJetMass_Legend=new TLegend(0.75,0.65,0.9,0.9);
 	Histo_DiJetMass_ggH125->Scale(1/Histo_DiJetMass_ggH125->Integral());
 	Histo_DiJetMass_VBFH125->Scale(1/Histo_DiJetMass_VBFH125->Integral());
 	Histo_DiJetMass_ttH125->Scale(1/Histo_DiJetMass_ttH125->Integral());
-	Histo_DiJetMass_ZZTo4lext1->Scale(1/Histo_DiJetMass_ZZTo4lext1->Integral());
+   Histo_DiJetMass_WH125->Scale(1/Histo_DiJetMass_WH125->Integral());
+   Histo_DiJetMass_ZH125->Scale(1/Histo_DiJetMass_ZH125->Integral());
 	DiJetMass_Legend->AddEntry(Histo_DiJetMass_ggH125,"ggH125","f");
 	DiJetMass_Legend->AddEntry(Histo_DiJetMass_VBFH125,"VBFH125","f");
 	DiJetMass_Legend->AddEntry(Histo_DiJetMass_ttH125,"ttH125","f");
-	DiJetMass_Legend->AddEntry(Histo_DiJetMass_ZZTo4lext1,"qqZZ","f");
+	DiJetMass_Legend->AddEntry(Histo_DiJetMass_WH125,"WH125","f");
+   DiJetMass_Legend->AddEntry(Histo_DiJetMass_ZH125,"ZH125","f");
 	Histo_DiJetMass_ggH125->SetLineColor(kBlue);
 	Histo_DiJetMass_VBFH125->SetLineColor(kGreen);
 	Histo_DiJetMass_ttH125->SetLineColor(kMagenta);
-	Histo_DiJetMass_ZZTo4lext1->SetLineColor(kRed+2);
-	Histo_DiJetMass_ZZTo4lext1->SetTitle("Invariant mass of 2 jets");
-	Histo_DiJetMass_ZZTo4lext1->GetXaxis()->SetTitle("M/GeV");
-	Histo_DiJetMass_ZZTo4lext1->GetYaxis()->SetTitle("normalized to 1");
-	Histo_DiJetMass_ZZTo4lext1->Draw("HIST SAME");
-	Histo_DiJetMass_ggH125->Draw("HIST SAME");
+   Histo_DiJetMass_WH125->SetLineColor(kRed+2);
+   Histo_DiJetMass_ZH125->SetLineColor(kPink);
+	Histo_DiJetMass_WH125->SetTitle("");
+	Histo_DiJetMass_WH125->GetXaxis()->SetTitle("dijet mass");
+	Histo_DiJetMass_WH125->GetYaxis()->SetTitle("normalized to 1");
+	Histo_DiJetMass_WH125->Draw("HIST SAME");
+   Histo_DiJetMass_ggH125->Draw("HIST SAME");
 	Histo_DiJetMass_VBFH125->Draw("HIST SAME");
 	Histo_DiJetMass_ttH125->Draw("HIST SAME");
+   Histo_DiJetMass_ZH125->Draw("HIST SAME");
 	DiJetMass_Legend->Draw();
-	DiJetMass_Canvas->SaveAs("DiJetMass.pdf");  
-	//cout<<Histo_DiJetMass_ggH125->Integral()<<" "<<Histo_DiJetMass_VBFH125->Integral()<<" "<<Histo_DiJetMass_ttH125->Integral()<<" "<<Histo_DiJetMass_ZZTo4lext1->Integral()<<endl;
+	//DiJetMass_Canvas->SaveAs("DiJetMass.pdf");
+
+   //DiJetDEta
+   //TCanvas *DiJetDEta_Canvas=new TCanvas("DiJetDEta","DiJetDEta",1600,800);
+   additional1_Canvas->cd(4);
+	TLegend* DiJetDEta_Legend=new TLegend(0.75,0.65,0.9,0.9);
+	Histo_DiJetDEta_ggH125->Scale(1/Histo_DiJetDEta_ggH125->Integral());
+	Histo_DiJetDEta_VBFH125->Scale(1/Histo_DiJetDEta_VBFH125->Integral());
+	Histo_DiJetDEta_ttH125->Scale(1/Histo_DiJetDEta_ttH125->Integral());
+   Histo_DiJetDEta_WH125->Scale(1/Histo_DiJetDEta_WH125->Integral());
+   Histo_DiJetDEta_ZH125->Scale(1/Histo_DiJetDEta_ZH125->Integral());
+	DiJetDEta_Legend->AddEntry(Histo_DiJetDEta_ggH125,"ggH125","f");
+	DiJetDEta_Legend->AddEntry(Histo_DiJetDEta_VBFH125,"VBFH125","f");
+	DiJetDEta_Legend->AddEntry(Histo_DiJetDEta_ttH125,"ttH125","f");
+	DiJetDEta_Legend->AddEntry(Histo_DiJetDEta_WH125,"WH125","f");
+   DiJetDEta_Legend->AddEntry(Histo_DiJetDEta_ZH125,"ZH125","f");
+	Histo_DiJetDEta_ggH125->SetLineColor(kBlue);
+	Histo_DiJetDEta_VBFH125->SetLineColor(kGreen);
+	Histo_DiJetDEta_ttH125->SetLineColor(kMagenta);
+   Histo_DiJetDEta_WH125->SetLineColor(kRed+2);
+   Histo_DiJetDEta_ZH125->SetLineColor(kPink);
+	Histo_DiJetDEta_WH125->SetTitle("");
+	Histo_DiJetDEta_WH125->GetXaxis()->SetTitle("dijet pseudorapidity");
+	Histo_DiJetDEta_WH125->GetYaxis()->SetTitle("normalized to 1");
+	Histo_DiJetDEta_WH125->Draw("HIST SAME");
+   Histo_DiJetDEta_ZH125->Draw("HIST SAME");
+   Histo_DiJetDEta_ggH125->Draw("HIST SAME");
+	Histo_DiJetDEta_VBFH125->Draw("HIST SAME");
+	Histo_DiJetDEta_ttH125->Draw("HIST SAME");
+	DiJetDEta_Legend->Draw();
+	//DiJetDEta_Canvas->SaveAs("DijetDEta.pdf");
+
+   additional1_Canvas->SaveAs("additional1.pdf");
+
+   TCanvas *additional2_Canvas=new TCanvas("","",1600,1200);
+   additional2_Canvas->Divide(2,2);
+
+   //ZZjjPt
+	//TCanvas *ZZjjPt_Canvas=new TCanvas("ZZjjPt","ZZjjPt",1600,800);
+	additional2_Canvas->cd(1);
+   TLegend* ZZjjPt_Legend=new TLegend(0.75,0.65,0.9,0.9);
+	Histo_ZZjjPt_ggH125->Scale(1/Histo_ZZjjPt_ggH125->Integral());
+	Histo_ZZjjPt_VBFH125->Scale(1/Histo_ZZjjPt_VBFH125->Integral());
+	Histo_ZZjjPt_ttH125->Scale(1/Histo_ZZjjPt_ttH125->Integral());
+   Histo_ZZjjPt_WH125->Scale(1/Histo_ZZjjPt_WH125->Integral());
+   Histo_ZZjjPt_ZH125->Scale(1/Histo_ZZjjPt_ZH125->Integral());
+	ZZjjPt_Legend->AddEntry(Histo_ZZjjPt_ggH125,"ggH125","f");
+	ZZjjPt_Legend->AddEntry(Histo_ZZjjPt_VBFH125,"VBFH125","f");
+	ZZjjPt_Legend->AddEntry(Histo_ZZjjPt_ttH125,"ttH125","f");
+	ZZjjPt_Legend->AddEntry(Histo_ZZjjPt_WH125,"WH125","f");
+   ZZjjPt_Legend->AddEntry(Histo_ZZjjPt_ZH125,"ZH125","f");
+	Histo_ZZjjPt_ggH125->SetLineColor(kBlue);
+	Histo_ZZjjPt_VBFH125->SetLineColor(kGreen);
+	Histo_ZZjjPt_ttH125->SetLineColor(kMagenta);
+   Histo_ZZjjPt_WH125->SetLineColor(kRed+2);
+   Histo_ZZjjPt_ZH125->SetLineColor(kPink);
+	Histo_ZZjjPt_VBFH125->SetTitle("");
+	Histo_ZZjjPt_VBFH125->GetXaxis()->SetTitle("ZZjj transverse momentum");
+	Histo_ZZjjPt_VBFH125->GetYaxis()->SetTitle("normalized to 1");
+	Histo_ZZjjPt_VBFH125->Draw("HIST SAME");
+   Histo_ZZjjPt_ggH125->Draw("HIST SAME");
+	Histo_ZZjjPt_ttH125->Draw("HIST SAME");
+   Histo_ZZjjPt_WH125->Draw("HIST SAME");
+   Histo_ZZjjPt_ZH125->Draw("HIST SAME");
+	ZZjjPt_Legend->Draw();
+	//ZZjjPt_Canvas->SaveAs("ZZjjPt.pdf");
+
+   //ZZEta
+	//TCanvas *ZZEta_Canvas=new TCanvas("ZZEta","ZZEta",1600,800);
+	additional2_Canvas->cd(2);
+   TLegend* ZZEta_Legend=new TLegend(0.75,0.65,0.9,0.9);
+	Histo_ZZEta_ggH125->Scale(1/Histo_ZZEta_ggH125->Integral());
+	Histo_ZZEta_VBFH125->Scale(1/Histo_ZZEta_VBFH125->Integral());
+	Histo_ZZEta_ttH125->Scale(1/Histo_ZZEta_ttH125->Integral());
+   Histo_ZZEta_WH125->Scale(1/Histo_ZZEta_WH125->Integral());
+   Histo_ZZEta_ZH125->Scale(1/Histo_ZZEta_ZH125->Integral());
+	ZZEta_Legend->AddEntry(Histo_ZZEta_ggH125,"ggH125","f");
+	ZZEta_Legend->AddEntry(Histo_ZZEta_VBFH125,"VBFH125","f");
+	ZZEta_Legend->AddEntry(Histo_ZZEta_ttH125,"ttH125","f");
+	ZZEta_Legend->AddEntry(Histo_ZZEta_WH125,"WH125","f");
+   ZZEta_Legend->AddEntry(Histo_ZZEta_ZH125,"ZH125","f");
+	Histo_ZZEta_ggH125->SetLineColor(kBlue);
+	Histo_ZZEta_VBFH125->SetLineColor(kGreen);
+	Histo_ZZEta_ttH125->SetLineColor(kMagenta);
+   Histo_ZZEta_WH125->SetLineColor(kRed+2);
+   Histo_ZZEta_ZH125->SetLineColor(kPink);
+	Histo_ZZEta_ttH125->SetTitle("");
+	Histo_ZZEta_ttH125->GetXaxis()->SetTitle("ZZ pair pseudorapidity");
+	Histo_ZZEta_ttH125->GetYaxis()->SetTitle("normalized to 1");
+	Histo_ZZEta_ttH125->Draw("HIST SAME");
+   Histo_ZZEta_WH125->Draw("HIST SAME");
+   Histo_ZZEta_ZH125->Draw("HIST SAME");
+   Histo_ZZEta_ggH125->Draw("HIST SAME");
+	Histo_ZZEta_VBFH125->Draw("HIST SAME");
+	ZZEta_Legend->Draw();
+	//ZZEta_Canvas->SaveAs("ZZEta.pdf");
+
+   //ZZPhi
+	//TCanvas *ZZPhi_Canvas=new TCanvas("ZZPhi","ZZPhi",1600,800);
+	additional2_Canvas->cd(3);
+   TLegend* ZZPhi_Legend=new TLegend(0.75,0.65,0.9,0.9);
+	Histo_ZZPhi_ggH125->Scale(1/Histo_ZZPhi_ggH125->Integral());
+	Histo_ZZPhi_VBFH125->Scale(1/Histo_ZZPhi_VBFH125->Integral());
+	Histo_ZZPhi_ttH125->Scale(1/Histo_ZZPhi_ttH125->Integral());
+   Histo_ZZPhi_WH125->Scale(1/Histo_ZZPhi_WH125->Integral());
+   Histo_ZZPhi_ZH125->Scale(1/Histo_ZZPhi_ZH125->Integral());
+	ZZPhi_Legend->AddEntry(Histo_ZZPhi_ggH125,"ggH125","f");
+	ZZPhi_Legend->AddEntry(Histo_ZZPhi_VBFH125,"VBFH125","f");
+	ZZPhi_Legend->AddEntry(Histo_ZZPhi_ttH125,"ttH125","f");
+	ZZPhi_Legend->AddEntry(Histo_ZZPhi_WH125,"WH125","f");
+   ZZPhi_Legend->AddEntry(Histo_ZZPhi_ZH125,"ZH125","f");
+	Histo_ZZPhi_ggH125->SetLineColor(kBlue);
+	Histo_ZZPhi_VBFH125->SetLineColor(kGreen);
+	Histo_ZZPhi_ttH125->SetLineColor(kMagenta);
+   Histo_ZZPhi_WH125->SetLineColor(kRed+2);
+   Histo_ZZPhi_ZH125->SetLineColor(kPink);
+	Histo_ZZPhi_ZH125->SetTitle("");
+	Histo_ZZPhi_ZH125->GetXaxis()->SetTitle("ZZ pair azimuthal angle");
+	Histo_ZZPhi_ZH125->GetYaxis()->SetTitle("normalized to 1");
+	Histo_ZZPhi_ZH125->Draw("HIST SAME");
+   Histo_ZZPhi_ggH125->Draw("HIST SAME");
+	Histo_ZZPhi_VBFH125->Draw("HIST SAME");
+	Histo_ZZPhi_ttH125->Draw("HIST SAME");
+   Histo_ZZPhi_WH125->Draw("HIST SAME");
+	ZZPhi_Legend->Draw();
+	//ZZPhi_Canvas->SaveAs("ZZPhi.pdf");
+
+   //DiJetFisher
+	//TCanvas *DiJetFisher_Canvas=new TCanvas("DiJetFisher","DiJetFisher",1600,800);
+	additional2_Canvas->cd(4);
+   TLegend* DiJetFisher_Legend=new TLegend(0.75,0.65,0.9,0.9);
+	Histo_DiJetFisher_ggH125->Scale(1/Histo_DiJetFisher_ggH125->Integral());
+	Histo_DiJetFisher_VBFH125->Scale(1/Histo_DiJetFisher_VBFH125->Integral());
+	Histo_DiJetFisher_ttH125->Scale(1/Histo_DiJetFisher_ttH125->Integral());
+   Histo_DiJetFisher_WH125->Scale(1/Histo_DiJetFisher_WH125->Integral());
+   Histo_DiJetFisher_ZH125->Scale(1/Histo_DiJetFisher_ZH125->Integral());
+	DiJetFisher_Legend->AddEntry(Histo_DiJetFisher_ggH125,"ggH125","f");
+	DiJetFisher_Legend->AddEntry(Histo_DiJetFisher_VBFH125,"VBFH125","f");
+	DiJetFisher_Legend->AddEntry(Histo_DiJetFisher_ttH125,"ttH125","f");
+	DiJetFisher_Legend->AddEntry(Histo_DiJetFisher_WH125,"WH125","f");
+   DiJetFisher_Legend->AddEntry(Histo_DiJetFisher_ZH125,"ZH125","f");
+	Histo_DiJetFisher_ggH125->SetLineColor(kBlue);
+	Histo_DiJetFisher_VBFH125->SetLineColor(kGreen);
+	Histo_DiJetFisher_ttH125->SetLineColor(kMagenta);
+   Histo_DiJetFisher_WH125->SetLineColor(kRed+2);
+   Histo_DiJetFisher_ZH125->SetLineColor(kPink);
+	Histo_DiJetFisher_ZH125->SetTitle("");
+	Histo_DiJetFisher_ZH125->GetXaxis()->SetTitle("dijet Fisher constant");
+	Histo_DiJetFisher_ZH125->GetYaxis()->SetTitle("normalized to 1");
+	Histo_DiJetFisher_ZH125->Draw("HIST SAME");
+   Histo_DiJetFisher_ggH125->Draw("HIST SAME");
+	Histo_DiJetFisher_VBFH125->Draw("HIST SAME");
+	Histo_DiJetFisher_ttH125->Draw("HIST SAME");
+   Histo_DiJetFisher_WH125->Draw("HIST SAME");
+   Histo_DiJetFisher_ZH125->Draw("HIST SAME");
+	DiJetFisher_Legend->Draw();
+	//DiJetFisher_Canvas->SaveAs("DiJetFisher.pdf"); 
+
+   additional2_Canvas->SaveAs("additional2.pdf");
+	 
 }
 
 void Analyzer :: Categorize(TString s1)
@@ -424,7 +697,7 @@ void Analyzer :: Categorize(TString s1)
       TDirectory * dir = (TDirectory*)f->Get(s1+":/ZZTree");
       dir->GetObject("candTree",tree);
    Init(tree);
-   h1 = (TH1F*)f->Get("ZZTree/Counters"); //dodano (radi citanja iz Countersa)
+   h1 = (TH1F*)f->Get("ZZTree/Counters");  
    if (fChain == 0) return;
    Long64_t nentries = fChain->GetEntriesFast();
    double w;
@@ -959,7 +1232,7 @@ void Analyzer :: HiggsProduction_Training()
    TFile* outputFile = TFile::Open( outfileName, "RECREATE" );
    TMVA::Factory *factory = new TMVA::Factory( "TMVAClassification", outputFile,
                                                "!V:!Silent:Color:DrawProgressBar:Transformations=I;D;P;G,D:AnalysisType=Classification" );
-   TMVA::DataLoader *dataloader=new TMVA::DataLoader("dataset_7");
+   TMVA::DataLoader *dataloader=new TMVA::DataLoader("dataset_3");
    
    dataloader->AddVariable( "D_VBF2j:=1./(1.+ p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal/p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal)", 'F' );
    dataloader->AddVariable("D_VBF1j := 1./(1.+p_JQCD_SIG_ghg2_1_JHUGen_JECNominal/(p_JVBF_SIG_ghv1_1_JHUGen_JECNominal*pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal))",'F');
@@ -967,7 +1240,7 @@ void Analyzer :: HiggsProduction_Training()
    dataloader->AddVariable("D_ZHh := 1./(1.+ (p_HadZH_mavjj_true_JECNominal*p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal)/(p_HadZH_mavjj_JECNominal*p_HadZH_SIG_ghz1_1_JHUGen_JECNominal))",'F');
    
     
-   dataloader->AddVariable( "p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal", 'F' );
+   /*dataloader->AddVariable( "p_JJQCD_SIG_ghg2_1_JHUGen_JECNominal", 'F' );
    dataloader->AddVariable( "p_JJVBF_SIG_ghv1_1_JHUGen_JECNominal", 'F' );
    dataloader->AddVariable( "p_JQCD_SIG_ghg2_1_JHUGen_JECNominal", 'F' );
    dataloader->AddVariable( "p_JVBF_SIG_ghv1_1_JHUGen_JECNominal", 'F' );
@@ -982,7 +1255,7 @@ void Analyzer :: HiggsProduction_Training()
    dataloader->AddVariable( "ZZEta", 'F' );
    dataloader->AddVariable( "ZZPhi", 'F' );
    dataloader->AddVariable( "ZZjjPt", 'F' );
-   dataloader->AddVariable( "DiJetFisher", 'F' );
+   dataloader->AddVariable( "DiJetFisher", 'F' );*/
     
    dataloader->AddVariable( "nCleanedJetsPt30BTagged", 'F' );
    dataloader->AddVariable( "nExtraLep", 'F' );
@@ -1073,15 +1346,15 @@ void Analyzer :: HiggsProduction_Training()
    dataloader->SetSignalWeightExpression("weight");   
    dataloader->SetBackgroundWeightExpression("weight");
    
-   dataloader->AddSignalTree(Tree_ttH);
+   //dataloader->AddSignalTree(Tree_ttH);
    dataloader->AddBackgroundTree( Tree_ggH );
-   dataloader->AddBackgroundTree( Tree_VBFH );
-   dataloader->AddBackgroundTree( Tree_WminusH );
-   dataloader->AddBackgroundTree( Tree_WplusH );
-   dataloader->AddBackgroundTree( Tree_ZH );
+   dataloader->AddSignalTree( Tree_VBFH );
+   //dataloader->AddSignalTree( Tree_WminusH );
+   //dataloader->AddSignalTree( Tree_WplusH );
+   //dataloader->AddSignalTree( Tree_ZH );
    
-   TCut mycuts = "ZZMass>=105 && ZZMass<=140 && pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal!=0";  
-   TCut mycutb = "ZZMass>=105 && ZZMass<=140 && pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal!=0";  
+   TCut mycuts = "ZZMass>118 && ZZMass<130 && pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal!=0";  
+   TCut mycutb = "ZZMass>118 && ZZMass<130 && pAux_JVBF_SIG_ghv1_1_JHUGen_JECNominal!=0";  
    //dataloader->PrepareTrainingAndTestTree( mycuts, mycutb, "nTrain_Signal=1000:nTrain_Background=1000:SplitMode=Random:NormMode=NumEvents:!V" );
    dataloader->PrepareTrainingAndTestTree( mycuts, mycutb, "SplitMode=Random:NormMode=None:!V" );
 
@@ -1105,9 +1378,12 @@ void Analyzer :: HiggsProduction_Training()
    //TH1F* signal = (TH1F*)f->Get("dataset/Method_BDT/BDT/MVA_BDT_Train_S");
    //TH1F* bkg = (TH1F*)f->Get("dataset/Method_BDT/BDT/MVA_BDT_Train_B");
    
-   /*gStyle->SetOptStat(0);
+   gStyle->SetOptStat(0);
    TH1F* signal = new TH1F("signal", " ", 160, -0.3, 0.4);
    TH1F* bkg = new TH1F("bkg", "bkg", 160, -0.3, 0.4);
+   TLine *line=new TLine(0.0349,0,0.0349,0.64);
+   TLatex *t=new TLatex(0.05,0.3,"#scale[0.7]{cut=0.0349}");
+   line->SetLineStyle(kDashed);
    signal->SetLineColor(kBlue);
    bkg->SetLineColor(kRed);
    Float_t x,y; 
@@ -1126,15 +1402,17 @@ void Analyzer :: HiggsProduction_Training()
    signal->Scale(1./signal->Integral());
    bkg->Scale(1./bkg->Integral());
 	TCanvas *canvas= new TCanvas("","",1600,900);
-   auto legend = new TLegend(0.82,0.82,0.9,0.9);
+   auto legend = new TLegend(0.8,0.8,0.9,0.9);
    legend->AddEntry(signal,"VBFH","f");
    legend->AddEntry(bkg,"ggH","f");
-   bkg->GetXaxis()->SetTitle("bdt_{ggH}^{VBFH}");
+   bkg->GetXaxis()->SetTitle("BDT_{ggH}^{VBFH}");
    bkg->GetYaxis()->SetTitle("normalized to 1");
    bkg->Draw("hist");
    signal->Draw("hist same");
    legend->Draw();
-   canvas->SaveAs("VBFH_BDT_modified.pdf");*/
+   line->Draw();
+   t->Draw();
+   canvas->SaveAs("VBFH_BDT_basic.pdf");
    
 }
 
